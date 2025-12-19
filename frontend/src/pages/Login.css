@@ -478,6 +478,26 @@
     border: 1px solid var(--border-color);
 }
 
+.back-btn {
+    width: 100%;
+    margin-top: var(--spacing-4);
+    padding: var(--spacing-3);
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    border-radius: var(--border-radius-sm);
+}
+
+.back-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
 .dark-mode .otp-instruction {
     background: var(--color-primary-lightest);
     border-color: var(--border-color);

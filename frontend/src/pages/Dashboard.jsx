@@ -197,8 +197,13 @@ const Dashboard = () => {
                                         onChange={(e) => setStaffSearch(e.target.value)}
                                     />
                                 </div>
-                                <button className="btn-primary btn-sm" onClick={() => setShowStaffModal(true)}>
-                                    <Users size={16} /> Add Staff
+                                <button className="btn-primary btn-sm btn-responsive" onClick={() => setShowStaffModal(true)}>
+                                    <span className="btn-content-desktop">
+                                        <Users size={16} /> Add Staff
+                                    </span>
+                                    <span className="btn-content-mobile">
+                                        <Plus size={20} />
+                                    </span>
                                 </button>
                             </div>
                         </div>
@@ -288,8 +293,13 @@ const Dashboard = () => {
                                     onChange={(e) => setPatientSearch(e.target.value)}
                                 />
                             </div>
-                            <button className="btn-primary btn-sm" onClick={() => setShowAddModal(true)}>
-                                <UserPlus size={16} /> Add Patient
+                            <button className="btn-primary btn-sm btn-responsive" onClick={() => setShowAddModal(true)}>
+                                <span className="btn-content-desktop">
+                                    <UserPlus size={16} /> Add Patient
+                                </span>
+                                <span className="btn-content-mobile">
+                                    <Plus size={20} />
+                                </span>
                             </button>
                         </div>
                     </div>
