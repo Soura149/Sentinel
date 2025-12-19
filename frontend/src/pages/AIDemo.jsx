@@ -1,133 +1,111 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Brain, Maximize2, Minimize2 } from 'lucide-react';
+import { ArrowLeft, Brain, Users, Loader } from 'lucide-react';
 import AIAssistant from '../components/AIAssistant';
 import { useTheme } from '../context/ThemeContext';
 import { useCriticalIndex } from '../context/CriticalIndexContext';
+import { patientAPI } from '../utils/api';
 import './AIDemo.css';
 
 const AIDemo = () => {
     const navigate = useNavigate();
-    const { isDarkMode, toggleTheme } = useTheme();
     const { updateCriticalIndex } = useCriticalIndex();
-    const [viewMode, setViewMode] = useState('full');
 
-    // Mock patient data for demo - using a valid ObjectId format
-    const mockPatient = {
-        _id: '507f1f77bcf86cd799439011', // Valid ObjectId format for demo
-        id: '507f1f77bcf86cd799439011',
-        name: 'John Doe',
-        patientId: 'P001',
-        age: 45,
-        gender: 'Male',
-        status: 'admitted',
-        roomNumber: '302',
-        bedNumber: 'A',
-        assignedDoctor: 'Dr. Smith',
-        admissionDate: new Date().toISOString()
-    };
+    // State for real data
+    const [patients, setPatients] = useState([]);
+    const [selectedPatientId, setSelectedPatientId] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // Fetch patients on mount
+    useEffect(() => {
+        const fetchPatients = async () => {
+            try {
+                const response = await patientAPI.getAll();
+                const patientList = response.data.data;
+                setPatients(patientList);
+
+                // Auto-select first patient if available
+                if (patientList.length > 0) {
+                    setSelectedPatientId(patientList[0]._id);
+                }
+            } catch (err) {
+                console.error("Failed to load patients:", err);
+                setError("Failed to load patient list. Please try again.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPatients();
+    }, []);
+
+    const selectedPatient = patients.find(p => p._id === selectedPatientId);
+
+    if (loading) {
+        return (
+            <div className="ai-demo-page loading-center">
+                <Loader className="spinning" size={40} />
+                <p>Loading patient data...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="ai-demo-page error-center">
+                <p className="error-text">{error}</p>
+                <button className="btn-secondary" onClick={() => window.location.reload()}>Retry</button>
+            </div>
+        );
+    }
 
     return (
         <div className="ai-demo-page fade-in">
-            <div className="demo-header">
-                <button className="back-btn" onClick={() => navigate('/dashboard')}>
-                    <ArrowLeft size={20} />
-                    Back to Dashboard
-                </button>
-
-                <div className="demo-title">
-                    <Brain size={32} className="brain-icon" />
+            {/* Analysis Header */}
+            <div className="analysis-header">
+                <div className="header-left">
+                    <Brain className="brain-icon-pulse" size={28} />
                     <div>
-                        <h1>AI Assistant Demo</h1>
-                        <p className="text-muted">Experience the merged AI components with enhanced light/dark mode support</p>
+                        <h1>AI Full Analysis</h1>
+                        <p className="text-muted">Comprehensive AI insights for patient care</p>
                     </div>
                 </div>
 
-                <div className="demo-controls">
-                    <button
-                        className={`mode-btn ${viewMode === 'full' ? 'active' : ''}`}
-                        onClick={() => setViewMode('full')}
+                <div className="patient-selector">
+                    <Users size={20} className="selector-icon" />
+                    <select
+                        value={selectedPatientId}
+                        onChange={(e) => setSelectedPatientId(e.target.value)}
+                        className="patient-select-input"
                     >
-                        <Maximize2 size={16} />
-                        Full View
-                    </button>
-                    <button
-                        className={`mode-btn ${viewMode === 'sidebar' ? 'active' : ''}`}
-                        onClick={() => setViewMode('sidebar')}
-                    >
-                        <Minimize2 size={16} />
-                        Sidebar View
-                    </button>
-                    <button
-                        className="theme-toggle"
-                        onClick={toggleTheme}
-                        title={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
-                    >
-                        {isDarkMode ? '☀️' : '🌙'}
-                        {isDarkMode ? 'Light' : 'Dark'} Mode
-                    </button>
+                        {patients.map(patient => (
+                            <option key={patient._id} value={patient._id}>
+                                {patient.name} (Room {patient.roomNumber || 'N/A'})
+                            </option>
+                        ))}
+                    </select>
                 </div>
             </div>
 
             <div className="demo-content">
-                {viewMode === 'full' ? (
+                {selectedPatient ? (
                     <AIAssistant
-                        patientId={mockPatient._id}
-                        patient={mockPatient}
-                        onCriticalIndexChange={(indexData) => updateCriticalIndex(mockPatient._id, indexData)}
+                        key={selectedPatient._id} // Force re-render on patient change
+                        patientId={selectedPatient._id}
+                        patient={selectedPatient}
+                        onCriticalIndexChange={(indexData) => updateCriticalIndex(selectedPatient._id, indexData)}
                         mode="full"
-                        demoMode={true}
+                        demoMode={false} // REAL DATA MODE
                     />
                 ) : (
-                    <div className="sidebar-demo-container">
-                        <div className="demo-main-content">
-                            <div className="demo-card">
-                                <h3>Main Content Area</h3>
-                                <p>This demonstrates how the AI Assistant works as a sidebar alongside your main content.</p>
-                                
-                                <div className="demo-notice">
-                                    <div className="demo-badge">
-                                        <span className="demo-text">Demo Mode Active</span>
-                                    </div>
-                                    <p>This demo uses simulated AI responses and mock patient data. The AI assistant will work without requiring a backend connection.</p>
-                                </div>
-
-                                <div className="feature-list">
-                                    <h4>New Features:</h4>
-                                    <ul>
-                                        <li><strong>Merged Components:</strong> Combined AIInsights and AISidebar into one unified component</li>
-                                        <li><strong>Enhanced Theming:</strong> Optimized for both light and dark modes with smooth transitions</li>
-                                        <li><strong>Responsive Design:</strong> Works perfectly on all screen sizes</li>
-                                        <li><strong>Flexible Modes:</strong> Switch between sidebar and full-page views</li>
-                                        <li><strong>Improved Chat:</strong> Better chat interface with typing indicators</li>
-                                        <li><strong>Smart Cards:</strong> Insights displayed as interactive cards with severity levels</li>
-                                        <li><strong>Critical Index:</strong> Visual risk assessment with dashboard alerts</li>
-                                        <li><strong>Performance:</strong> Optimized rendering and state management</li>
-                                    </ul>
-                                </div>
-
-                                <div className="theme-showcase">
-                                    <h4>Theme Showcase:</h4>
-                                    <p>Toggle between light and dark modes to see the enhanced theming in action!</p>
-                                    <div className="theme-samples">
-                                        <div className="sample-card">
-                                            <div className="sample-header">Sample Card</div>
-                                            <div className="sample-content">
-                                                This card demonstrates the theme-aware styling with proper contrast and readability.
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <AIAssistant
-                            patientId={mockPatient._id}
-                            patient={mockPatient}
-                            onCriticalIndexChange={(indexData) => updateCriticalIndex(mockPatient._id, indexData)}
-                            mode="sidebar"
-                            demoMode={true}
-                        />
+                    <div className="empty-analysis-state">
+                        <Users size={48} />
+                        <h3>No Patients Found</h3>
+                        <p>Add patients to your dashboard to enable AI analysis.</p>
+                        <button className="btn-primary" onClick={() => navigate('/dashboard')}>
+                            Go to Dashboard
+                        </button>
                     </div>
                 )}
             </div>

@@ -48,16 +48,7 @@ const Navbar = () => {
                 </div>
 
                 <div className="navbar-right">
-                    {user?.role !== 'patient' && (
-                        <button
-                            className="nav-link"
-                            onClick={() => navigate('/ai-demo')}
-                            title="AI Assistant Demo"
-                        >
-                            <Brain size={20} />
-                            <span>AI Demo</span>
-                        </button>
-                    )}
+
 
                     <button
                         className="navbar-theme-toggle"
