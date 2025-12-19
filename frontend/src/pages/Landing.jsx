@@ -53,7 +53,7 @@ const Landing = () => {
                             View Dashboard
                         </button>
                         <button className="btn-primary" onClick={handleRequestDemo}>
-                            Request Demo
+                            Sign In
                         </button>
                     </div>
                 </div>
@@ -76,7 +76,7 @@ const Landing = () => {
                     </p>
                     <div className="hero-cta">
                         <button className="btn-primary btn-lg" onClick={handleRequestDemo}>
-                            Request Demo
+                            Sign In
                             <ArrowRight size={20} />
                         </button>
                         <button className="btn-secondary btn-lg" onClick={handleViewDashboard}>
@@ -329,7 +329,7 @@ const Landing = () => {
                         </p>
                         <div className="cta-buttons">
                             <button className="btn-primary btn-xl" onClick={handleRequestDemo}>
-                                Request Demo
+                                Sign In
                                 <ArrowRight size={20} />
                             </button>
                             <button className="btn-secondary btn-xl" onClick={handleViewDashboard}>

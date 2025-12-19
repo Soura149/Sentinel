@@ -271,9 +271,16 @@
 }
 
 .dashboard-section {
-    padding: 1.5rem 2rem;
-    border-radius: 16px;
-    /* Glassmorphism properties inherited via mixin concept above */
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-8) var(--spacing-8);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+}
+
+.dashboard-section:hover {
+    box-shadow: var(--shadow-md);
 }
 
 .section-header {
@@ -287,16 +294,35 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-4);
+    flex-wrap: wrap;
+}
+
+.section-header-actions .btn-primary {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-5);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-base);
+    white-space: nowrap;
+}
+
+.section-header-actions .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
 }
 
 .section-header h3 {
     margin: 0;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1e293b;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--spacing-2);
+    letter-spacing: -0.01em;
 }
 
 /* Premium Search Input */
@@ -307,29 +333,41 @@
 
 .section-search .search-icon {
     position: absolute;
-    left: 12px;
+    left: var(--spacing-4);
     top: 50%;
     transform: translateY(-50%);
-    color: #94a3b8;
+    color: var(--text-tertiary);
     pointer-events: none;
+    z-index: 1;
+    width: 16px;
+    height: 16px;
 }
 
 .section-search input {
     width: 100%;
-    padding: 0.6rem 1rem 0.6rem 2.5rem;
-    font-size: 0.9rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    background: #f8fafc;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    color: #334155;
+    padding: var(--spacing-3) var(--spacing-4) var(--spacing-3) 2.75rem;
+    font-size: var(--font-size-sm);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background: var(--bg-secondary);
+    transition: all var(--transition-fast);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-normal);
+}
+
+.section-search input::placeholder {
+    color: var(--text-tertiary);
 }
 
 .section-search input:focus {
-    background: white;
-    border-color: #00A1E4;
-    box-shadow: 0 0 0 3px rgba(0, 161, 228, 0.1);
+    background: var(--bg-card);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px var(--color-primary-lightest);
     outline: none;
+}
+
+.section-search input:focus ~ .search-icon {
+    color: var(--color-primary);
 }
 
 /* 3. Horizontal Staff Scroll */
@@ -744,12 +782,14 @@
     overflow-x: auto;
     overflow-y: auto;
     max-height: 600px;
-    border-radius: var(--border-radius);
+    border-radius: var(--border-radius-lg);
     border: 1px solid var(--border-color);
     position: relative;
     background: var(--bg-card);
     z-index: 1;
     isolation: isolate;
+    box-shadow: var(--shadow-xs);
+    margin-top: var(--spacing-4);
 }
 
 .dense-data-table {
@@ -774,7 +814,7 @@
     color: var(--text-secondary);
     text-transform: uppercase;
     font-size: var(--font-size-xs);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     background: var(--bg-tertiary);
     border-bottom: 2px solid var(--border-color-strong);
     white-space: nowrap;
@@ -782,15 +822,17 @@
     top: 0;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    font-weight: var(--font-weight-bold);
 }
 
 .dense-data-table td {
-    padding: var(--spacing-4) var(--spacing-5);
-    border-bottom: 1px solid var(--border-color-subtle);
+    padding: var(--spacing-5) var(--spacing-5);
+    border-bottom: 1px solid var(--border-color);
     color: var(--text-primary);
     background: var(--bg-card);
     vertical-align: middle;
     transition: all var(--transition-fast);
+    font-size: var(--font-size-sm);
 }
 
 .dense-data-table tbody tr {
@@ -887,26 +929,30 @@
 }
 
 .staff-avatar-small {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--color-primary-lightest);
-    color: var(--color-primary);
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-sm);
     position: relative;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
 }
 
 .status-dot {
     position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 10px;
-    height: 10px;
+    bottom: -2px;
+    right: -2px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    border: 2px solid var(--bg-card);
+    border: 2.5px solid var(--bg-card);
+    box-shadow: var(--shadow-xs);
 }
 
 .status-dot.online {
@@ -919,38 +965,47 @@
 
 .role-badge-small {
     font-size: var(--font-size-xs);
-    padding: 2px 6px;
+    padding: 2px 8px;
     background: var(--bg-tertiary);
     color: var(--text-secondary);
-    border-radius: var(--border-radius-xs);
+    border-radius: var(--border-radius-full);
     font-weight: var(--font-weight-medium);
+    display: inline-block;
+    margin-top: var(--spacing-1);
+    border: 1px solid var(--border-color);
 }
 
 .status-badge {
-    padding: var(--spacing-1) var(--spacing-2);
-    border-radius: var(--border-radius-xs);
+    padding: var(--spacing-1) var(--spacing-3);
+    border-radius: var(--border-radius-full);
     font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    letter-spacing: 0.02em;
 }
 
 .status-badge.online {
-    background: var(--color-secondary-lighter);
-    color: var(--color-secondary-dark);
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--color-success);
+    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .status-badge.offline {
     background: var(--bg-tertiary);
     color: var(--text-tertiary);
+    border: 1px solid var(--border-color);
 }
 
 .shift-info {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: var(--spacing-1);
 }
 
 .shift-name-small {
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
     color: var(--text-primary);
     font-size: var(--font-size-sm);
 }
@@ -958,10 +1013,13 @@
 .shift-time-small {
     font-size: var(--font-size-xs);
     color: var(--text-tertiary);
+    font-weight: var(--font-weight-normal);
 }
 
 .fw-500 {
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    font-size: var(--font-size-base);
 }
 
 /* Force SVG visibility for small table buttons */
@@ -987,7 +1045,9 @@
 }
 
 .text-muted {
-    color: #94a3b8;
+    color: var(--text-tertiary);
+    font-size: var(--font-size-sm);
+    font-style: italic;
 }
 
 .p-4 {
@@ -1003,20 +1063,39 @@
 }
 
 .icon-btn-sm {
-    /* Removed fixed width to allow flex growth */
-    flex: 1;
+    width: 36px;
     height: 36px;
-    border: 1px solid #e2e8f0;
-    background: white;
-    border-radius: 8px;
+    min-width: 36px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    border-radius: var(--border-radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #94a3b8;
+    color: var(--text-tertiary);
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    min-width: 0;
-    /* Prevent flex overflow */
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.icon-btn-sm:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--border-color-strong);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.icon-btn-sm.success:hover {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: var(--color-success);
+    color: var(--color-success);
+}
+
+.icon-btn-sm.danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: var(--color-danger);
+    color: var(--color-danger);
 }
 
 @keyframes spin {
@@ -1036,9 +1115,22 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .dashboard {
-        padding: 0.75rem;
+        padding: var(--spacing-3);
         overflow-x: hidden;
-        /* Prevent horizontal scroll on body */
+        font-size: 0.9rem;
+    }
+
+    .active-shift-banner {
+        padding: var(--spacing-3) var(--spacing-4);
+        font-size: var(--font-size-sm);
+    }
+
+    .active-shift-banner h3 {
+        font-size: var(--font-size-base);
+    }
+
+    .active-shift-banner p {
+        font-size: var(--font-size-xs);
     }
 
     /* Stack Summary Strip */
@@ -1136,24 +1228,161 @@
         width: 100%;
     }
 
-    /* Table Container - Critical for scroll */
+    /* Table Container - Proper mobile scrolling */
     .table-wrapper {
-        margin: 0 -1.25rem;
-        /* Pull flush to card edges */
-        width: calc(100% + 2.5rem);
+        margin: var(--spacing-4) calc(-1 * var(--spacing-6)) 0;
+        width: calc(100% + 2 * var(--spacing-6));
         border: none;
         border-radius: 0;
+        overflow-x: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .dashboard-section {
+        padding: var(--spacing-4) var(--spacing-6);
+        overflow: hidden;
     }
 
     .dense-data-table {
-        min-width: 600px;
-        /* Force table width to trigger scroll */
+        min-width: 800px;
+        font-size: 0.8rem;
+        width: 100%;
     }
 
     .dense-data-table th,
     .dense-data-table td {
-        padding: 0.75rem 1rem;
-        font-size: 0.85rem;
+        padding: var(--spacing-3) var(--spacing-3);
+        font-size: 0.75rem;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    .dense-data-table th {
+        font-size: 0.7rem;
+        font-weight: var(--font-weight-bold);
+        padding: var(--spacing-3) var(--spacing-3);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .section-header {
+        flex-wrap: wrap;
+        gap: var(--spacing-2);
+    }
+
+    .section-header h3 {
+        font-size: var(--font-size-base);
+    }
+
+    .section-header-actions {
+        flex-wrap: wrap;
+        gap: var(--spacing-2);
+        width: 100%;
+    }
+
+    .section-search {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .row-actions {
+        gap: var(--spacing-1);
+    }
+
+    .icon-btn-sm {
+        width: 32px;
+        height: 32px;
+        padding: var(--spacing-1);
+    }
+
+    .icon-btn-sm svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .staff-name-cell {
+        gap: var(--spacing-2);
+        align-items: center;
+    }
+
+    .staff-avatar-small {
+        width: 32px;
+        height: 32px;
+        font-size: 0.7rem;
+        flex-shrink: 0;
+    }
+
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        border-width: 2px;
+    }
+
+    .shift-info {
+        gap: var(--spacing-1);
+        min-width: 120px;
+    }
+
+    .shift-name-small {
+        font-size: 0.7rem;
+        white-space: nowrap;
+    }
+
+    .shift-time-small {
+        font-size: 0.65rem;
+        white-space: nowrap;
+    }
+
+    .status-badge {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+        white-space: nowrap;
+    }
+
+    .role-badge-small {
+        font-size: 0.6rem;
+        padding: 2px 6px;
+        white-space: nowrap;
+    }
+
+    .fw-500 {
+        font-size: 0.75rem;
+        white-space: nowrap;
+    }
+
+    .row-actions {
+        gap: var(--spacing-1);
+        justify-content: center;
+        flex-wrap: nowrap;
+    }
+
+    .icon-btn-sm {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        padding: var(--spacing-1);
+        flex-shrink: 0;
+    }
+
+    .icon-btn-sm svg {
+        width: 14px;
+        height: 14px;
+        min-width: 14px;
+        min-height: 14px;
+    }
+
+    /* Ensure table cells maintain alignment */
+    .dense-data-table td {
+        vertical-align: middle;
+    }
+
+    /* Patient table specific adjustments */
+    .id-badge {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        white-space: nowrap;
     }
 
     .staff-micro-card {

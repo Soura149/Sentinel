@@ -80,6 +80,10 @@
 .theme-toggle-landing {
     width: 40px;
     height: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    min-height: 40px;
+    max-height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -90,6 +94,8 @@
     cursor: pointer;
     transition: all var(--transition-base);
     box-shadow: var(--shadow-sm);
+    padding: 0;
+    flex-shrink: 0;
 }
 
 .theme-toggle-landing:hover {
@@ -102,6 +108,10 @@
 .theme-toggle-landing svg {
     width: 20px;
     height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    max-width: 20px;
+    max-height: 20px;
     stroke: currentColor;
     stroke-width: 2;
     fill: none;
@@ -689,15 +699,59 @@
 
     .landing-nav-content {
         padding: 0 var(--spacing-4);
+        flex-wrap: wrap;
+    }
+
+    .landing-brand {
+        font-size: var(--font-size-lg);
+    }
+
+    .landing-logo {
+        width: 28px;
+        height: 28px;
     }
 
     .landing-nav-right {
         gap: var(--spacing-2);
+        flex-wrap: wrap;
+        justify-content: flex-end;
     }
 
     .landing-nav-right button {
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-xs);
         padding: var(--spacing-2) var(--spacing-3);
+        white-space: nowrap;
+    }
+
+    .theme-toggle-landing {
+        width: 36px;
+        height: 36px;
+    }
+
+    .hero-cta {
+        flex-direction: row;
+        gap: var(--spacing-3);
+        flex-wrap: nowrap;
+    }
+
+    .hero-cta button {
+        flex: 1;
+        min-width: 0;
+        font-size: var(--font-size-sm);
+        padding: var(--spacing-3) var(--spacing-4);
+    }
+
+    .cta-buttons {
+        flex-direction: row;
+        gap: var(--spacing-3);
+        flex-wrap: nowrap;
+    }
+
+    .cta-buttons button {
+        flex: 1;
+        min-width: 0;
+        font-size: var(--font-size-base);
+        padding: var(--spacing-3) var(--spacing-4);
     }
 }
 
