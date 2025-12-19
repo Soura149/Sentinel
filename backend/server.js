@@ -66,6 +66,18 @@ app.get('/health', (req, res) => {
     });
 });
 
+// Root route
+app.get('/', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Sentinel ICU Dashboard API',
+        endpoints: {
+            health: '/health',
+            docs: 'See frontend implementation'
+        }
+    });
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/patient-auth', patientAuthRoutes);
