@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, UserPlus, Mail, Phone, User } from 'lucide-react';
 import { authAPI } from '../utils/api';
+import './AddStaffModal.css';
 
 const AddStaffModal = ({ onClose, onSuccess }) => {
     const [formData, setFormData] = useState({

@@ -132,11 +132,28 @@
     color: var(--color-danger);
 }
 
-.detail-item>div {
+.detail-item>.detail-content {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
     flex: 1;
+}
+
+.status-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+}
+
+.status-dot.online {
+    background: #10b981;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+}
+
+.status-dot.offline {
+    background: #9ca3af;
 }
 
 .detail-label {

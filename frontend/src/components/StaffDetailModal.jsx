@@ -50,14 +50,14 @@ const StaffDetailModal = ({ staff, onClose }) => {
                         <div className="detail-grid">
                             <div className="detail-item">
                                 <Mail size={18} className="detail-icon" />
-                                <div>
+                                <div className="detail-content">
                                     <span className="detail-label">Email</span>
                                     <span className="detail-value">{staff.email}</span>
                                 </div>
                             </div>
                             <div className="detail-item">
                                 <Phone size={18} className="detail-icon" />
-                                <div>
+                                <div className="detail-content">
                                     <span className="detail-label">Phone</span>
                                     <span className="detail-value">{staff.phone || 'Not provided'}</span>
                                 </div>
@@ -71,22 +71,11 @@ const StaffDetailModal = ({ staff, onClose }) => {
                         <div className="detail-grid">
                             <div className="detail-item">
                                 {staff.isLoggedIn ? (
-                                    <div className="detail-icon success" style={{
-                                        width: '18px',
-                                        height: '18px',
-                                        borderRadius: '50%',
-                                        background: '#10b981',
-                                        boxShadow: '0 0 0 4px rgba(16, 185, 129, 0.2)'
-                                    }} />
+                                    <div className="status-dot online" />
                                 ) : (
-                                    <div className="detail-icon" style={{
-                                        width: '18px',
-                                        height: '18px',
-                                        borderRadius: '50%',
-                                        background: '#9ca3af'
-                                    }} />
+                                    <div className="status-dot offline" />
                                 )}
-                                <div>
+                                <div className="detail-content">
                                     <span className="detail-label">Status</span>
                                     <span className={`detail-value ${staff.isLoggedIn ? 'text-success' : 'text-muted'}`}>
                                         {staff.isLoggedIn ? 'Online' : 'Offline'}
@@ -95,7 +84,7 @@ const StaffDetailModal = ({ staff, onClose }) => {
                             </div>
                             <div className="detail-item">
                                 <Calendar size={18} className="detail-icon" />
-                                <div>
+                                <div className="detail-content">
                                     <span className="detail-label">Joined</span>
                                     <span className="detail-value">{formatDate(staff.createdAt)}</span>
                                 </div>

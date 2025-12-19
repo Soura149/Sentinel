@@ -1,0 +1,29 @@
+/* AddStaffModal.css */
+.modal-form .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.modal-form .input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-tertiary);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.modal-form input {
+    padding-left: 3rem !important;
+}
+
+.modal-form input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px var(--color-primary-light);
+}
+
+.modal-form input:focus~.input-icon {
+    color: var(--color-primary);
+}

@@ -190,30 +190,26 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* ACTIVE SHIFT DISPLAY FOR STAFF */}
-            {user?.role === 'staff' && user.activeSchedule && user.activeSchedule.shiftName && (
-                <div className="active-shift-banner fade-in" style={{
-                    margin: '0 2rem 1rem 2rem',
-                    background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                    color: 'white',
-                    padding: '1rem',
-                    borderRadius: '12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                }}>
-                    <Clock size={24} />
-                    <div>
-                        <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Active Shift: {user.activeSchedule.shiftName}</h3>
-                        <p style={{ margin: 0, opacity: 0.9 }}>
-                            {new Date(user.activeSchedule.startTime).toLocaleString()} - {new Date(user.activeSchedule.endTime).toLocaleString()}
-                        </p>
-                    </div>
-                </div>
-            )}
-
             <div className="dashboard-layout">
+                {/* ACTIVE SHIFT DISPLAY FOR STAFF */}
+                {user?.role === 'staff' && user.activeSchedule && user.activeSchedule.shiftName && (
+                    <div className="dashboard-section active-shift-card fade-in">
+                        <div className="shift-icon-large">
+                            <Clock size={28} />
+                        </div>
+                        <div className="shift-info-content">
+                            <h3>Active Shift: <span className="highlight-text">{user.activeSchedule.shiftName}</span></h3>
+                            <div className="shift-time-display">
+                                <span className="time-label">Start:</span>
+                                <span className="time-val">{new Date(user.activeSchedule.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                <span className="time-divider">→</span>
+                                <span className="time-label">End:</span>
+                                <span className="time-val">{new Date(user.activeSchedule.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                <span className="date-badge">{new Date(user.activeSchedule.startTime).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 {/* 2. Staff Section (Horizontal Scroll) - Admin Only */}
                 {user?.role === 'admin' && (
                     <section className="dashboard-section staff-section">
