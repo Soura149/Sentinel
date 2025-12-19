@@ -22,6 +22,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-xs);
+    align-self: flex-start;
     transition: all var(--transition-fast);
 }
 

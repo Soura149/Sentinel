@@ -252,7 +252,7 @@ Recent reports summaries:
             content = msg.get('content', '')
             conversation += f"{role.capitalize()}: {content}\n"
 
-        # Create prompt (optimized for lower token usage)
+        # Create prompt (optimized for lower token usage, plain text only)
         prompt = f"""
 {context_str}
 {conversation}
@@ -260,6 +260,16 @@ Recent reports summaries:
 User: {request.message}
 
 Provide a helpful, accurate response based on patient context. Ask clarifying questions if needed.
+
+IMPORTANT: Use plain text only. Do NOT use:
+- Asterisks (**)
+- Hashtags (###)
+- Underscores (_)
+- Backticks (`)
+- Any markdown formatting
+- Special characters for emphasis
+
+Just write in clear, simple sentences.
 """
 
         # Call Gemini API - Using gemini-1.5-flash for higher quota
@@ -398,7 +408,7 @@ IMPORTANT RULES:
             image = Image.open(io.BytesIO(image_data))
             
             # Call Gemini Vision API - Using gemini-1.5-flash for higher quota
-            model = genai.GenerativeModel('gemini-1.5-flash')
+            model = genai.GenerativeModel('gemini-2.5-flash-lite')
             response = model.generate_content([prompt, image])
             
             ai_response = response.text
@@ -512,6 +522,12 @@ GUIDELINES:
 5. If the question is serious or requires medical intervention, advise consulting their assigned doctor
 6. Keep responses concise but informative (2-4 paragraphs max)
 
+FORMATTING:
+- Use plain text only
+- Do NOT use asterisks (**), hashtags (###), underscores (_), or backticks (`)
+- No markdown formatting or special characters
+- Write in clear, simple sentences
+
 ⚠️ DISCLAIMER: Always end with a brief reminder that this is informational guidance and they should consult their healthcare provider for medical decisions.
 """
 
@@ -546,4 +562,4 @@ if __name__ == "__main__":
     print(f"📖 API Docs: http://localhost:{port}/docs\n")
     
     uvicorn.run(app, host=host, port=port)
-# Force reload - changes applied at 04:20 IST
+# trigger reload

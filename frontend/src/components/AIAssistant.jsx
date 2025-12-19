@@ -199,7 +199,7 @@ const AIAssistant = ({ patientId, patient, onStateChange, onCriticalIndexChange,
     const [insights, setInsights] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [autoRefresh, setAutoRefresh] = useState(true);
+    const [autoRefresh, setAutoRefresh] = useState(false); // Disabled by default to save API quota
     const [chatMessages, setChatMessages] = useState([]);
     const [chatInput, setChatInput] = useState('');
     const [chatLoading, setChatLoading] = useState(false);
@@ -207,16 +207,15 @@ const AIAssistant = ({ patientId, patient, onStateChange, onCriticalIndexChange,
     // const [criticalIndexData, setCriticalIndexData] = useState(null); // Removed to prevent infinite loop
     const messagesEndRef = useRef(null);
 
-    // Auto-generate insights on mount and every 5 minutes
+    // Auto-refresh insights if enabled (disabled by default to save API quota)
     useEffect(() => {
-        if (!isMinimized) {
-            generateInsights();
-        }
+        // Removed auto-generation on mount to save API quota
+        // User must click "Refresh" to generate insights
 
         if (autoRefresh && !isMinimized) {
             const interval = setInterval(() => {
                 generateInsights(true); // Silent refresh
-            }, 5 * 60 * 1000); // 5 minutes
+            }, 15 * 60 * 1000); // 15 minutes (increased from 5 to reduce API calls)
 
             return () => clearInterval(interval);
         }
@@ -325,20 +324,57 @@ const AIAssistant = ({ patientId, patient, onStateChange, onCriticalIndexChange,
                     conversationHistory
                 });
 
+                // Safely clean response, handling special characters
+                let cleanResponse;
+                try {
+                    const rawResponse = response.data.data.response || '';
+                    cleanResponse = rawResponse
+                        .replace(/\*\*/g, '')  // Remove bold
+                        .replace(/###/g, '')   // Remove headers
+                        .replace(/\*/g, '')    // Remove italics/bullets
+                        .replace(/_/g, '')     // Remove underscores
+                        .replace(/`/g, '')     // Remove code blocks
+                        .replace(/\n\s*\n/g, '\n') // Remove extra newlines
+                        .trim();
+
+                    // If cleaning resulted in empty string, use original
+                    if (!cleanResponse) {
+                        cleanResponse = rawResponse;
+                    }
+                } catch (cleanError) {
+                    console.warn('Error cleaning response, using raw:', cleanError);
+                    cleanResponse = response.data.data.response || 'No response received';
+                }
+
                 const aiMessage = {
                     role: 'assistant',
-                    content: response.data.data.response
+                    content: cleanResponse
                 };
 
                 setChatMessages(prev => [...prev, aiMessage]);
             }
         } catch (err) {
             console.error('Chat Error:', err);
+            console.error('Error details:', err.response?.data || err.message);
+
+            let errorMsg = 'AI service error.';
+
+            // Provide more specific error messages
+            if (err.response?.status === 429 || err.message?.includes('quota')) {
+                errorMsg = '⚠️ API quota exceeded. Please wait for quota reset or switch to a different API key.';
+            } else if (err.response?.status === 503) {
+                errorMsg = 'AI service is not configured. Please check your Gemini API key.';
+            } else if (err.code === 'ECONNREFUSED') {
+                errorMsg = 'Cannot connect to AI service. Please ensure the AI service is running.';
+            } else if (demoMode) {
+                errorMsg = 'Demo mode: Chat simulation failed. This is expected in demo mode without AI service.';
+            } else {
+                errorMsg = 'AI service error. Please ensure the AI service is running with a valid Gemini API key.';
+            }
+
             const errorMessage = {
                 role: 'assistant',
-                content: demoMode
-                    ? 'Demo mode: Chat simulation failed. This is expected in demo mode without AI service.'
-                    : 'AI service error. Please ensure the AI service is running with a valid Gemini API key.'
+                content: errorMsg
             };
             setChatMessages(prev => [...prev, errorMessage]);
         } finally {
