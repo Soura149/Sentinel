@@ -265,7 +265,7 @@ const VitalsMonitor = ({ patientId }) => {
             {/* Manual Entry Form */}
             {showAddForm && (
                 <div className="add-vitals-form card">
-                    <h3>📝 Manual Vital Signs Entry</h3>
+                    <h3>Manual Vital Signs Entry</h3>
                     <p className="form-description">
                         <AlertCircle size={16} />
                         Use this form to manually record vital signs in case of technical error or equipment malfunction
@@ -408,7 +408,7 @@ const VitalsMonitor = ({ patientId }) => {
 
             {/* Latest Vitals Display */}
             <div className="latest-vitals card">
-                <h3>📊 Current Vital Signs</h3>
+                <h3>Current Vital Signs</h3>
                 {latestVitals ? (
                     <div className="vitals-grid">
                         <VitalCard
@@ -436,7 +436,7 @@ const VitalsMonitor = ({ patientId }) => {
                         />
                         <VitalCard
                             title="Temperature"
-                            value={latestVitals.temperature}
+                            value={latestVitals.temperature ? parseFloat(latestVitals.temperature).toFixed(2) : null}
                             unit="°F"
                             icon={Activity}
                             type="temperature"
@@ -476,7 +476,7 @@ const VitalsMonitor = ({ patientId }) => {
             {/* Graphs or Table View */}
             {viewMode === 'graphs' ? (
                 <div className="vitals-graphs card">
-                    <h3>📈 Vital Trends</h3>
+                    <h3>Vital Trends</h3>
                     {loading ? (
                         <div className="loading">Loading charts...</div>
                     ) : vitals.length > 0 ? (
@@ -533,7 +533,7 @@ const VitalsMonitor = ({ patientId }) => {
             ) : (
                 <div className="vitals-history card">
                     <div className="history-header">
-                        <h3>📋 Vital Signs Readings</h3>
+                        <h3>Vital Signs Readings</h3>
                     </div>
 
                     {loading ? (

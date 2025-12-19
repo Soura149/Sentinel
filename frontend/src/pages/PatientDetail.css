@@ -1,6 +1,6 @@
 .patient-detail {
     min-height: 100vh;
-    padding: var(--spacing-xl);
+    padding: var(--spacing-4);
     background: var(--bg-primary);
     margin-right: 0;
     transition: margin-right var(--transition-slow);
@@ -31,8 +31,8 @@
 .patient-detail-header {
     background: var(--bg-card);
     border-radius: var(--border-radius);
-    padding: var(--spacing-xl);
-    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
     box-shadow: var(--shadow-sm);
 }
 
@@ -74,26 +74,27 @@
 
 .patient-detail-tabs {
     display: flex;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-xl);
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-4);
     background: var(--bg-card);
-    padding: var(--spacing-sm);
+    padding: var(--spacing-2);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-sm);
 }
 
 .tab-btn {
     flex: 1;
-    padding: var(--spacing-md) var(--spacing-lg);
+    padding: var(--spacing-3) var(--spacing-4);
     background: transparent;
     color: var(--text-secondary);
     border-radius: var(--border-radius-sm);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
     transition: all var(--transition-base);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-2);
 }
 
 .tab-btn:hover {

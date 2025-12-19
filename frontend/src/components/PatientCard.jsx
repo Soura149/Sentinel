@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Activity, Calendar, Bed, Stethoscope, AlertCircle, Trash2 } from 'lucide-react';
+import { User, Activity, Calendar, Bed, Stethoscope, AlertCircle, Trash2, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCriticalIndex } from '../context/CriticalIndexContext';
 import './PatientCard.css';
@@ -65,13 +65,13 @@ const PatientCard = ({ patient, onDelete }) => {
         const getIndicatorConfig = () => {
             switch (riskLevel) {
                 case 'critical':
-                    return { icon: '🚨', text: `CI: ${criticalData.score}`, className: 'critical' };
+                    return { icon: <AlertTriangle size={16} />, text: `CI: ${criticalData.score}`, className: 'critical' };
                 case 'warning':
-                    return { icon: '⚠️', text: `CI: ${criticalData.score}`, className: 'warning' };
+                    return { icon: <AlertTriangle size={16} />, text: `CI: ${criticalData.score}`, className: 'warning' };
                 case 'moderate':
-                    return { icon: '⚡', text: `CI: ${criticalData.score}`, className: 'moderate' };
+                    return { icon: <Activity size={16} />, text: `CI: ${criticalData.score}`, className: 'moderate' };
                 default:
-                    return { icon: '✅', text: `CI: ${criticalData.score}`, className: 'stable' };
+                    return { icon: <CheckCircle2 size={16} />, text: `CI: ${criticalData.score}`, className: 'stable' };
             }
         };
 

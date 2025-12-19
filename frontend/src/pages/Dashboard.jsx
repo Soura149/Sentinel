@@ -145,48 +145,26 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard fade-in">
-            {/* 1. Header & Summary Strip */}
-            <div className="dashboard-summary-strip">
-                <div className="summary-left">
-                    <div className="dashboard-title">
-                        <img src={logo} alt="S" className="brand-icon" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
-                        <h2>Dashboard</h2>
+            {/* Metrics Cards */}
+            <div className="metrics-cards-grid">
+                <div className="metric-card">
+                    <div className="metric-card-header">
+                        <span className="metric-label">Admitted</span>
+                        <RefreshCw size={16} className={`refresh-icon ${loading ? 'spinning' : ''}`} onClick={fetchData} title="Refresh" />
                     </div>
-
-                    <div className="divider-vertical"></div>
-                    <div className="metrics-group">
-                        <div className="metric-item">
-                            <span className="label">Admitted</span>
-                            <span className="value">{admittedPatients.length}</span>
-                        </div>
-                        <div className="metric-item">
-                            <span className="label">Discharged</span>
-                            <span className="value">{dischargedPatients.length}</span>
-                        </div>
-                        <div className="metric-item highlight">
-                            <span className="label">Total</span>
-                            <span className="value">{admittedPatients.length + dischargedPatients.length}</span>
-                        </div>
-                    </div>
+                    <div className="metric-value-large">{admittedPatients.length}</div>
                 </div>
-
-                <div className="summary-actions">
-                    <button className="icon-action-btn" onClick={fetchData} title="Refresh Data">
-                        <RefreshCw size={18} className={loading ? 'spinning' : ''} />
-                    </button>
-                    {/* Add Change Password button for everyone */}
-                    <button className="icon-action-btn" onClick={() => navigate('/change-password')} title="Change Password">
-                        <Lock size={18} />
-                    </button>
-
-                    {user?.role === 'admin' && (
-                        <button className="primary-action-btn secondary" onClick={() => setShowStaffModal(true)}>
-                            <Users size={16} /> Add Staff
-                        </button>
-                    )}
-                    <button className="primary-action-btn" onClick={() => setShowAddModal(true)}>
-                        <UserPlus size={16} /> Add Patient
-                    </button>
+                <div className="metric-card">
+                    <div className="metric-card-header">
+                        <span className="metric-label">Discharged</span>
+                    </div>
+                    <div className="metric-value-large">{dischargedPatients.length}</div>
+                </div>
+                <div className="metric-card highlight">
+                    <div className="metric-card-header">
+                        <span className="metric-label">Total Patients</span>
+                    </div>
+                    <div className="metric-value-large">{admittedPatients.length + dischargedPatients.length}</div>
                 </div>
             </div>
 
@@ -214,107 +192,117 @@ const Dashboard = () => {
             )}
 
             <div className="dashboard-layout">
-                {/* 2. Staff Section (Horizontal Scroll) - Admin Only */}
+                {/* 2. Staff Section (Table Layout) - Admin Only */}
                 {user?.role === 'admin' && (
                     <section className="dashboard-section staff-section">
                         <div className="section-header">
                             <h3>My Staff Team</h3>
-                            <div className="section-search">
-                                <Search size={14} className="search-icon" />
-                                <input
-                                    type="text"
-                                    placeholder="Search staff..."
-                                    value={staffSearch}
-                                    onChange={(e) => setStaffSearch(e.target.value)}
-                                />
+                            <div className="section-header-actions">
+                                <div className="section-search">
+                                    <Search size={14} className="search-icon" />
+                                    <input
+                                        type="text"
+                                        placeholder="Search staff..."
+                                        value={staffSearch}
+                                        onChange={(e) => setStaffSearch(e.target.value)}
+                                    />
+                                </div>
+                                <button className="btn-primary btn-sm" onClick={() => setShowStaffModal(true)}>
+                                    <Users size={16} /> Add Staff
+                                </button>
                             </div>
                         </div>
 
-                        <div className="staff-horizontal-scroll">
-                            {visibleStaff.length === 0 ? (
-                                <div className="empty-staff-msg">No staff members found.</div>
-                            ) : (
-                                visibleStaff.map(staff => (
-                                    <div key={staff._id} className="staff-card-pro">
-                                        <div className="staff-card-header">
-                                            <div className="staff-avatar-pro">
-                                                {staff.name.charAt(0).toUpperCase()}
-                                                <div className={`status-indicator-ring ${staff.isLoggedIn ? 'online' : 'offline'}`}
-                                                    title={staff.isLoggedIn ? "Online" : "Offline"}
-                                                />
-                                            </div>
-                                            <div className="staff-identity">
-                                                <h4>{staff.name}</h4>
-                                                <span className="role-badge">{staff.designation || staff.role}</span>
-                                            </div>
-                                            <button className="more-options-btn" title="More Options">
-                                                <div className="dot"></div>
-                                                <div className="dot"></div>
-                                                <div className="dot"></div>
-                                            </button>
-                                        </div>
-
-                                        <div className="staff-card-body">
-                                            <div className="contact-row">
-                                                <Mail size={14} className="icon" />
-                                                <span className="text" title={staff.email}>{staff.email}</span>
-                                            </div>
-
-                                            {staff.activeSchedule?.shiftName ? (
-                                                <div className="shift-badge active">
-                                                    <div className="shift-icon">
-                                                        <Clock size={12} />
+                        <div className="table-wrapper">
+                            <table className="dense-data-table staff-table">
+                                <thead>
+                                    <tr>
+                                        <th>Staff Name</th>
+                                        <th>Email</th>
+                                        <th>Designation</th>
+                                        <th>Status</th>
+                                        <th>Active Shift</th>
+                                        <th className="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {visibleStaff.length === 0 ? (
+                                        <tr><td colSpan="6" className="text-center p-4">No staff members found.</td></tr>
+                                    ) : (
+                                        visibleStaff.map(staff => (
+                                            <tr key={staff._id}>
+                                                <td>
+                                                    <div className="staff-name-cell">
+                                                        <div className="staff-avatar-small">
+                                                            {staff.name.charAt(0).toUpperCase()}
+                                                            <div className={`status-dot ${staff.isLoggedIn ? 'online' : 'offline'}`}></div>
+                                                        </div>
+                                                        <div>
+                                                            <div className="fw-500">{staff.name}</div>
+                                                            <span className="role-badge-small">{staff.designation || staff.role}</span>
+                                                        </div>
                                                     </div>
-                                                    <div className="shift-details">
-                                                        <span className="shift-name">{staff.activeSchedule.shiftName}</span>
-                                                        <span className="shift-time">
-                                                            {new Date(staff.activeSchedule.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })} -
-                                                            {new Date(staff.activeSchedule.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
-                                                        </span>
+                                                </td>
+                                                <td>{staff.email}</td>
+                                                <td>{staff.designation || staff.role}</td>
+                                                <td>
+                                                    <span className={`status-badge ${staff.isLoggedIn ? 'online' : 'offline'}`}>
+                                                        {staff.isLoggedIn ? 'Online' : 'Offline'}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    {staff.activeSchedule?.shiftName ? (
+                                                        <div className="shift-info">
+                                                            <span className="shift-name-small">{staff.activeSchedule.shiftName}</span>
+                                                            <span className="shift-time-small">
+                                                                {new Date(staff.activeSchedule.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(staff.activeSchedule.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                            </span>
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-muted">No active shift</span>
+                                                    )}
+                                                </td>
+                                                <td className="text-center" onClick={(e) => e.stopPropagation()}>
+                                                    <div className="row-actions">
+                                                        <button className="icon-btn-sm" onClick={() => { setSelectedStaff(staff); setShowStaffDetailModal(true); }} title="View">
+                                                            <Eye size={14} />
+                                                        </button>
+                                                        <button className="icon-btn-sm success" onClick={() => handleAssignShift(staff)} title="Assign Shift">
+                                                            <Clock size={14} />
+                                                        </button>
+                                                        <button className="icon-btn-sm danger" onClick={() => handleDeleteStaff(staff._id)} title="Delete">
+                                                            <Trash2 size={14} />
+                                                        </button>
                                                     </div>
-                                                </div>
-                                            ) : (
-                                                <div className="shift-badge inactive">
-                                                    <span className="no-shift">No active shift</span>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="staff-card-footer">
-                                            <button
-                                                className="action-btn-pro view"
-                                                onClick={() => {
-                                                    setSelectedStaff(staff);
-                                                    setShowStaffDetailModal(true);
-                                                }}
-                                                title="View Profile"
-                                            >
-                                                <Eye size={16} />
-                                            </button>
-                                            <button
-                                                className="action-btn-pro assign"
-                                                onClick={() => handleAssignShift(staff)}
-                                                title="Assign Shift"
-                                            >
-                                                <Clock size={16} />
-                                            </button>
-                                            <button
-                                                className="action-btn-pro delete"
-                                                onClick={() => handleDeleteStaff(staff._id)}
-                                                title="Remove Staff"
-                                            >
-                                                <Trash2 size={16} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))
-                            )}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
                         </div>
                     </section>
                 )}
 
                 {/* 3. Patient Section (Tabs + Data Table) */}
                 <section className="dashboard-section patient-section">
+                    <div className="section-header">
+                        <h3>Patients</h3>
+                        <div className="section-header-actions">
+                            <div className="section-search">
+                                <Search size={14} className="search-icon" />
+                                <input
+                                    type="text"
+                                    placeholder="Search patients..."
+                                    value={patientSearch}
+                                    onChange={(e) => setPatientSearch(e.target.value)}
+                                />
+                            </div>
+                            <button className="btn-primary btn-sm" onClick={() => setShowAddModal(true)}>
+                                <UserPlus size={16} /> Add Patient
+                            </button>
+                        </div>
+                    </div>
                     <div className="section-toolbar">
                         <div className="view-mode-tabs">
                             <button
@@ -329,16 +317,6 @@ const Dashboard = () => {
                             >
                                 Discharged Patients
                             </button>
-                        </div>
-
-                        <div className="section-search patient-search">
-                            <Search size={14} className="search-icon" />
-                            <input
-                                type="text"
-                                placeholder="Search patients..."
-                                value={patientSearch}
-                                onChange={(e) => setPatientSearch(e.target.value)}
-                            />
                         </div>
                     </div>
 

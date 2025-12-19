@@ -26,6 +26,13 @@ const MedicalChatbot = ({ patientId }) => {
     const messagesEndRef = useRef(null);
     const fileInputRef = useRef(null);
 
+    const predefinedPrompts = [
+        "What is this disease and whom should I consult?",
+        "Explain my medical report",
+        "What do these symptoms indicate?",
+        "Review my test results"
+    ];
+
     // Initial greeting
     useEffect(() => {
         const loadInitialMessage = async () => {
@@ -127,13 +134,13 @@ const MedicalChatbot = ({ patientId }) => {
             if (typeof rawContent === 'object' && rawContent !== null) {
                 // If it's the structured analysis object (diagnosis, suggestions, etc.)
                 let parts = [];
-                if (rawContent.diagnosis) parts.push(`### 🩺 Diagnosis\n${rawContent.diagnosis}`);
-                if (rawContent.severity) parts.push(`**⚠️ Severity:** ${rawContent.severity}`);
+                if (rawContent.diagnosis) parts.push(`### Diagnosis\n${rawContent.diagnosis}`);
+                if (rawContent.severity) parts.push(`**Severity:** ${rawContent.severity}`);
                 if (rawContent.suggestions && Array.isArray(rawContent.suggestions)) {
-                    parts.push(`### 💡 Recommended Actions\n${rawContent.suggestions.map(s => `- ${s}`).join('\n')}`);
+                    parts.push(`### Recommended Actions\n${rawContent.suggestions.map(s => `- ${s}`).join('\n')}`);
                 }
                 if (rawContent.precautions && Array.isArray(rawContent.precautions)) {
-                    parts.push(`### 🛡️ Precautions\n${rawContent.precautions.map(p => `- ${p}`).join('\n')}`);
+                    parts.push(`### Precautions\n${rawContent.precautions.map(p => `- ${p}`).join('\n')}`);
                 }
                 if (rawContent.medications && Array.isArray(rawContent.medications)) {
                     parts.push(`### 💊 Possible Medications\n${rawContent.medications.map(m => `- ${m}`).join('\n')}`);
@@ -218,6 +225,35 @@ const MedicalChatbot = ({ patientId }) => {
                             </button>
                         </div>
                     </div>
+
+                    {/* Predefined Prompts */}
+                    {messages.length <= 1 && (
+                        <div className="predefined-prompts">
+                            <p className="prompts-label">Quick questions:</p>
+                            <div className="prompts-grid">
+                                {predefinedPrompts.map((prompt, idx) => (
+                                    <button
+                                        key={idx}
+                                        className="prompt-btn"
+                                        onClick={async (e) => {
+                                            e.preventDefault();
+                                            setInputMessage(prompt);
+                                            // Wait a moment for state to update
+                                            await new Promise(resolve => setTimeout(resolve, 50));
+                                            // Create a synthetic event
+                                            const syntheticEvent = {
+                                                preventDefault: () => {},
+                                                target: { value: prompt }
+                                            };
+                                            handleSendMessage(syntheticEvent);
+                                        }}
+                                    >
+                                        {prompt}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Messages Area */}
                     <div className="chat-messages">
@@ -331,7 +367,8 @@ const MedicalChatbot = ({ patientId }) => {
             {/* Toggle Button */}
             {!isOpen && (
                 <button className="chatbot-toggle" onClick={() => setIsOpen(true)}>
-                    <MessageCircle size={28} />
+                    <MessageCircle size={24} />
+                    <span className="chatbot-toggle-text">Get AI medical assistance</span>
                     {unreadCount > 0 && (
                         <span className="notification-badge">{unreadCount}</span>
                     )}

@@ -65,10 +65,10 @@ const CriticalIndex = ({ cards, insights }) => {
 
     const getLevelIcon = () => {
         switch (indexData.level) {
-            case 'critical': return '🚨';
-            case 'warning': return '⚠️';
-            case 'moderate': return '⚡';
-            default: return '✅';
+            case 'critical': return <AlertTriangle size={24} />;
+            case 'warning': return <AlertTriangle size={24} />;
+            case 'moderate': return <Activity size={24} />;
+            default: return <Activity size={24} />;
         }
     };
 
@@ -91,7 +91,7 @@ const CriticalIndex = ({ cards, insights }) => {
                 }}
             >
                 <div className="critical-index-header">
-                    <div className="critical-index-icon">
+                    <div className="critical-index-icon" style={{ color: indexData.color }}>
                         {getLevelIcon()}
                     </div>
                     <div className="critical-index-info">
@@ -117,15 +117,15 @@ const CriticalIndex = ({ cards, insights }) => {
                 {cards && cards.length > 0 && (
                     <div className="critical-index-breakdown">
                         <div className="breakdown-item">
-                            <span className="breakdown-icon">🚨</span>
+                            <AlertTriangle size={16} className="breakdown-icon" />
                             <span className="breakdown-text">Critical: {indexData.criticalCount}</span>
                         </div>
                         <div className="breakdown-item">
-                            <span className="breakdown-icon">⚠️</span>
+                            <AlertTriangle size={16} className="breakdown-icon" />
                             <span className="breakdown-text">Warning: {indexData.warningCount}</span>
                         </div>
                         <div className="breakdown-item">
-                            <span className="breakdown-icon">ℹ️</span>
+                            <Activity size={16} className="breakdown-icon" />
                             <span className="breakdown-text">Info: {cards.length - indexData.criticalCount - indexData.warningCount}</span>
                         </div>
                     </div>
@@ -145,7 +145,7 @@ const InsightCard = ({ severity, message, timestamp }) => {
                     bgColor: 'var(--danger-bg)',
                     textColor: 'var(--danger-text)',
                     label: 'Critical',
-                    icon: '⚠️'
+                    icon: <AlertTriangle size={20} />
                 };
             case 'medium':
                 return {
@@ -153,7 +153,7 @@ const InsightCard = ({ severity, message, timestamp }) => {
                     bgColor: 'var(--warning-bg)',
                     textColor: 'var(--warning-text)',
                     label: 'Warning',
-                    icon: '⚡'
+                    icon: <Activity size={20} />
                 };
             default:
                 return {
@@ -161,7 +161,7 @@ const InsightCard = ({ severity, message, timestamp }) => {
                     bgColor: 'var(--info-bg)',
                     textColor: 'var(--info-text)',
                     label: 'Info',
-                    icon: 'ℹ️'
+                    icon: <Activity size={20} />
                 };
         }
     };

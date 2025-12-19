@@ -87,28 +87,27 @@ const AIDemo = () => {
                                 
                                 <div className="demo-notice">
                                     <div className="demo-badge">
-                                        <span className="demo-icon">🎭</span>
                                         <span className="demo-text">Demo Mode Active</span>
                                     </div>
                                     <p>This demo uses simulated AI responses and mock patient data. The AI assistant will work without requiring a backend connection.</p>
                                 </div>
 
                                 <div className="feature-list">
-                                    <h4>✨ New Features:</h4>
+                                    <h4>New Features:</h4>
                                     <ul>
-                                        <li>🔄 <strong>Merged Components:</strong> Combined AIInsights and AISidebar into one unified component</li>
-                                        <li>🎨 <strong>Enhanced Theming:</strong> Optimized for both light and dark modes with smooth transitions</li>
-                                        <li>📱 <strong>Responsive Design:</strong> Works perfectly on all screen sizes</li>
-                                        <li>🔧 <strong>Flexible Modes:</strong> Switch between sidebar and full-page views</li>
-                                        <li>💬 <strong>Improved Chat:</strong> Better chat interface with typing indicators</li>
-                                        <li>📊 <strong>Smart Cards:</strong> Insights displayed as interactive cards with severity levels</li>
-                                        <li>🚨 <strong>Critical Index:</strong> Visual risk assessment with dashboard alerts</li>
-                                        <li>⚡ <strong>Performance:</strong> Optimized rendering and state management</li>
+                                        <li><strong>Merged Components:</strong> Combined AIInsights and AISidebar into one unified component</li>
+                                        <li><strong>Enhanced Theming:</strong> Optimized for both light and dark modes with smooth transitions</li>
+                                        <li><strong>Responsive Design:</strong> Works perfectly on all screen sizes</li>
+                                        <li><strong>Flexible Modes:</strong> Switch between sidebar and full-page views</li>
+                                        <li><strong>Improved Chat:</strong> Better chat interface with typing indicators</li>
+                                        <li><strong>Smart Cards:</strong> Insights displayed as interactive cards with severity levels</li>
+                                        <li><strong>Critical Index:</strong> Visual risk assessment with dashboard alerts</li>
+                                        <li><strong>Performance:</strong> Optimized rendering and state management</li>
                                     </ul>
                                 </div>
 
                                 <div className="theme-showcase">
-                                    <h4>🎨 Theme Showcase:</h4>
+                                    <h4>Theme Showcase:</h4>
                                     <p>Toggle between light and dark modes to see the enhanced theming in action!</p>
                                     <div className="theme-samples">
                                         <div className="sample-card">

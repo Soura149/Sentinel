@@ -5,6 +5,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { CriticalIndexProvider } from './context/CriticalIndexContext';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Landing from './pages/Landing';
 import Dashboard from './pages/Dashboard';
 import PatientDetail from './pages/PatientDetail';
 import PatientDashboard from './pages/PatientDashboard';
@@ -41,6 +42,12 @@ const AppContent = () => {
       <ErrorBoundary>
         {isAuthenticated && <Navbar />}
         <Routes>
+          <Route 
+            path="/" 
+            element={
+              isAuthenticated ? <Navigate to="/dashboard" replace /> : <Landing />
+            } 
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route
@@ -81,7 +88,6 @@ const AppContent = () => {
               </PrivateRoute>
             }
           />
-          <Route path="/" element={<Navigate to="/dashboard" />} />
         </Routes>
       </ErrorBoundary>
     </Router>

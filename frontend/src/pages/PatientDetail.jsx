@@ -120,24 +120,24 @@ const PatientDetail = () => {
 
             <div className="patient-detail-tabs">
                 <button
-                    className={`tab-btn ${activeTab === 'vitals' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('vitals')}
-                >
-                    <Activity size={20} />
-                    Vitals Monitor
-                </button>
-                <button
                     className={`tab-btn ${activeTab === 'reports' ? 'active' : ''}`}
                     onClick={() => setActiveTab('reports')}
                 >
-                    <FileText size={20} />
+                    <FileText size={18} />
                     Reports & Documents
+                </button>
+                <button
+                    className={`tab-btn ${activeTab === 'vitals' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('vitals')}
+                >
+                    <Activity size={18} />
+                    Vitals Monitor
                 </button>
             </div>
 
             <div className="patient-detail-content">
-                {activeTab === 'vitals' && <VitalsMonitor patientId={id} />}
                 {activeTab === 'reports' && <ReportsSection patientId={id} />}
+                {activeTab === 'vitals' && <VitalsMonitor patientId={id} />}
             </div>
 
             {/* AI Assistant - Always present, minimizable */}

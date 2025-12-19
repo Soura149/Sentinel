@@ -119,7 +119,7 @@ const PatientDashboard = () => {
                     {/* Vitals History */}
                     <div className="dashboard-card" style={{ gridColumn: 'span 12' }}>
                         <div className="card-header">
-                            <h2><Heart size={20} /> Latest Vitals</h2>
+                            <h2>Latest Vitals</h2>
                         </div>
                         <div className="table-container">
                             <table className="data-table">
@@ -142,7 +142,7 @@ const PatientDashboard = () => {
                                                     {vital.bloodPressure?.systolic || '--'}/{vital.bloodPressure?.diastolic || '--'}
                                                 </td>
                                                 <td>{vital.oxygenSaturation}%</td>
-                                                <td>{vital.temperature}°C</td>
+                                                <td>{vital.temperature ? parseFloat(vital.temperature).toFixed(2) : '--'}°C</td>
                                             </tr>
                                         ))
                                     ) : (

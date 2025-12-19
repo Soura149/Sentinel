@@ -28,6 +28,15 @@
     transition: all var(--transition-fast);
 }
 
+.navbar-dashboard-text {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-secondary);
+    margin-left: var(--spacing-2);
+    padding-left: var(--spacing-4);
+    border-left: 1px solid var(--border-color);
+}
+
 .navbar-brand:hover {
     color: var(--color-primary);
 }

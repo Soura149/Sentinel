@@ -14,9 +14,9 @@
 
 /* Floating Toggle Button */
 .chatbot-toggle {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
+    min-width: auto;
+    height: 56px;
+    border-radius: 28px;
     background: linear-gradient(135deg, #2563eb, #1d4ed8);
     color: white;
     border: none;
@@ -25,9 +25,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-4);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+}
+
+.chatbot-toggle-text {
+    white-space: nowrap;
+    font-size: var(--font-size-sm);
 }
 
 .chatbot-toggle:hover {
@@ -157,6 +166,45 @@
 }
 
 /* ===== CHAT MESSAGES AREA ===== */
+/* Predefined Prompts */
+.predefined-prompts {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.prompts-label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.prompts-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.prompt-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.prompt-btn:hover {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: #93c5fd;
+    transform: translateX(4px);
+}
+
 .chat-messages {
     flex: 1;
     overflow-y: auto;
@@ -382,22 +430,46 @@
 }
 
 .file-btn {
-    background: transparent;
-    border: none;
-    color: #94a3b8;
-    width: 36px;
-    height: 36px;
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #60a5fa;
+    width: 40px;
+    height: 40px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s;
+    position: relative;
+}
+
+.file-btn::after {
+    content: 'Upload Image';
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.file-btn:hover::after {
+    opacity: 1;
 }
 
 .file-btn:hover {
-    color: #60a5fa;
-    background: rgba(59, 130, 246, 0.1);
+    color: #93c5fd;
+    background: rgba(59, 130, 246, 0.25);
+    border-color: rgba(59, 130, 246, 0.5);
+    transform: scale(1.1);
 }
 
 .text-input {

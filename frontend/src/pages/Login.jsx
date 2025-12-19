@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { Activity, Mail, Lock, User, Phone, Key, Sun, Moon } from 'lucide-react';
+import { Activity, Mail, Lock, User, Phone, Key, Sun, Moon, ArrowLeft } from 'lucide-react';
 import logo from '../assets/logo.png';
 import { patientAuthAPI } from '../utils/api';
 import './Login.css';
 
 const Login = () => {
     const { isDarkMode, toggleTheme } = useTheme();
+    const { login, isAuthenticated, user, loading: authLoading } = useAuth();
+    const navigate = useNavigate();
+    
     const [loginType, setLoginType] = useState('staff'); // 'staff' (includes admin) or 'patient'
 
     // Staff Login State
@@ -28,8 +31,17 @@ const Login = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { login } = useAuth();
-    const navigate = useNavigate();
+    // Check if user is already logged in and redirect
+    useEffect(() => {
+        if (!authLoading && isAuthenticated && user) {
+            // User is already logged in, redirect to appropriate dashboard
+            if (user.role === 'patient') {
+                navigate('/patient-dashboard', { replace: true });
+            } else {
+                navigate('/dashboard', { replace: true });
+            }
+        }
+    }, [isAuthenticated, user, authLoading, navigate]);
 
     // Staff Login Handler
     const handleStaffLogin = async (e) => {
@@ -45,7 +57,12 @@ const Login = () => {
                 if (result.user && result.user.role === 'staff' && !result.user.isPasswordChanged) {
                     navigate('/change-password');
                 } else {
-                    navigate('/dashboard');
+                    // Route based on user role
+                    if (result.user?.role === 'patient') {
+                        navigate('/patient-dashboard');
+                    } else {
+                        navigate('/dashboard');
+                    }
                 }
             } else {
                 setError(result.error);
@@ -113,11 +130,38 @@ const Login = () => {
         setPatientData({ ...patientData, [e.target.name]: e.target.value });
     };
 
+    // Show loading state while checking authentication
+    if (authLoading) {
+        return (
+            <div className="login-container">
+                <div className="login-loading">
+                    <div className="loading-spinner"></div>
+                    <p>Checking authentication...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Don't render login form if user is already authenticated (will redirect)
+    if (isAuthenticated && user) {
+        return null;
+    }
+
     return (
         <div className="login-container">
             <div className="login-background"></div>
 
             <div className="login-card fade-in">
+                {/* Back to Landing Page Button */}
+                <button
+                    className="back-to-landing-btn"
+                    onClick={() => navigate('/')}
+                    title="Back to Home"
+                >
+                    <ArrowLeft size={18} />
+                    <span>Back to Home</span>
+                </button>
+
                 {/* Theme Toggle Button (Standard Navbar Style) */}
                 <button
                     className="theme-toggle"

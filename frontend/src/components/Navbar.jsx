@@ -22,6 +22,9 @@ const Navbar = () => {
                 <div className="navbar-brand" onClick={() => navigate(user?.role === 'patient' ? '/patient-dashboard' : '/dashboard')}>
                     <img src={logo} alt="Sentinel" className="brand-icon" style={{ width: '36px', height: '36px', objectFit: 'contain' }} />
                     <span>Sentinel</span>
+                    {user && (
+                        <span className="navbar-dashboard-text">Dashboard</span>
+                    )}
                 </div>
 
                 <div className="navbar-right">
