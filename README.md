@@ -54,11 +54,22 @@ Follow the prompts to install dependencies for all services.
 ```bash
 cd backend
 npm install
-# Create .env from .env.example and set MONGODB_URI & JWT_SECRET
+# Create .env file and set:
+# - MONGODB_URI (your MongoDB connection string)
+# - JWT_SECRET (your JWT secret key)
+# - SMTP_USER (your email address for sending OTPs)
+# - SMTP_PASS (your email app password)
+# - SMTP_HOST (default: smtp.gmail.com)
+# - SMTP_PORT (default: 587)
 npm run seed  # Seeding sample data
 npm run dev
 ```
 *Runs on: `http://localhost:5000`*
+
+**Email Configuration for Patient OTP:**
+- For Gmail: Enable 2-Step Verification and generate an App Password at https://myaccount.google.com/apppasswords
+- Add to `.env`: `SMTP_USER=your_email@gmail.com` and `SMTP_PASS=your_app_password`
+- If email is not configured, OTP will be logged to console (for development)
 
 #### AI Service
 ```bash

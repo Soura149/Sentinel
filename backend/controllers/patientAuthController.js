@@ -1,5 +1,6 @@
 import Patient from '../models/Patient.js';
 import jwt from 'jsonwebtoken';
+import { sendOTPEmail } from '../utils/emailService.js';
 
 // In-memory OTP store (In production, use Redis)
 const otpStore = new Map();
@@ -73,14 +74,25 @@ export const requestOTP = async (req, res) => {
             patientId: patient._id
         });
 
-        // Log OTP (Mock Email Service)
-        console.log(`\n📧 [MOCK EMAIL] To: ${email} | Subject: Sentinel Login OTP | Body: Your code is ${otp}\n`);
+        // Send OTP via email
+        const emailResult = await sendOTPEmail(cleanEmail, otp, patient.name);
+        
+        if (!emailResult.success) {
+            console.warn(`⚠️ Email sending failed, but OTP is still valid: ${emailResult.error}`);
+        }
 
-        res.status(200).json({
+        const response = {
             success: true,
             message: `OTP sent to ${email}`,
-            debug_otp: otp
-        });
+            emailSent: emailResult.success
+        };
+
+        // Only include debug_otp in development
+        if (process.env.NODE_ENV === 'development') {
+            response.debug_otp = otp;
+        }
+
+        res.status(200).json(response);
 
     } catch (error) {
         res.status(500).json({

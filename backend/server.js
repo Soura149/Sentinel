@@ -6,8 +6,19 @@ import morgan from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Load env vars
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load env vars (explicitly from backend directory)
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+// Log email configuration status on startup
+if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+    console.log(`✅ Email service configured: ${process.env.SMTP_USER}`);
+} else {
+    console.log(`⚠️  Email service not configured. OTPs will be logged to console.`);
+    console.log(`   Add SMTP_USER and SMTP_PASS to backend/.env to enable email sending`);
+}
 
 // Import database
 import connectDB from './config/database.js';
@@ -23,9 +34,6 @@ import chatRoutes from './routes/chatRoutes.js';
 
 // Import middleware
 import { errorHandler, notFound } from './middleware/error.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Initialize express
 const app = express();
