@@ -304,8 +304,8 @@ const Login = () => {
                             className="quick-btn admin"
                             onClick={() => {
                                 setLoginType('staff');
-                                setEmail('blabla@gmail.com');
-                                setPassword('1234567890');
+                                setEmail('admin@icu.com');
+                                setPassword('admin123');
                                 setError('');
                             }}
                         >
@@ -318,7 +318,7 @@ const Login = () => {
                             onClick={() => {
                                 setLoginType('staff');
                                 setEmail('kk@gmail.com');
-                                setPassword('Bidhan');
+                                setPassword('123456');
                                 setError('');
                             }}
                         >
@@ -332,8 +332,8 @@ const Login = () => {
                                 setLoginType('patient');
                                 setPatientStep('request');
                                 setPatientData({
-                                    name: 'abhay shaw',
-                                    email: 'abhay@gmail.com',
+                                    name: 'Soura',
+                                    email: 'soura@gmail.com',
                                     phone: '1234567890'
                                 });
                                 setError('');

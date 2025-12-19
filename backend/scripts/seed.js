@@ -37,7 +37,8 @@ const seedData = async () => {
             password: 'staff123',
             name: 'Dr. Sarah Johnson',
             role: 'staff',
-            phone: '+1234567891'
+            phone: '+1234567891',
+            createdBy: admin._id
         });
 
         const staff2 = await User.create({
@@ -45,14 +46,47 @@ const seedData = async () => {
             password: 'staff123',
             name: 'Dr. Michael Chen',
             role: 'staff',
-            phone: '+1234567892'
+            phone: '+1234567892',
+            createdBy: admin._id
+        });
+
+        const staff3 = await User.create({
+            email: 'kk@gmail.com',
+            password: '123456',
+            name: 'Dr. KK',
+            role: 'staff',
+            phone: '+1234567899',
+            createdBy: admin._id
         });
 
         console.log('✅ Staff users created');
 
         // Create sample patients
+        const patientQuickLogin = await Patient.create({
+            name: 'Soura',
+            email: 'soura@gmail.com',
+            phone: '1234567890',
+            age: 30,
+            dateOfBirth: new Date('1994-01-01'),
+            gender: 'male',
+            reasonForAdmission: 'Routine Checkup',
+            roomNumber: '104',
+            bedNumber: 'D',
+            assignedDoctor: 'Dr. KK',
+            status: 'admitted',
+            bloodType: 'O+',
+            createdBy: staff3._id,
+            emergencyContact: {
+                name: 'Emergency Contact',
+                phone: '0000000000',
+                relation: 'Friend'
+            }
+        });
+
         const patient1 = await Patient.create({
             name: 'John Doe',
+            email: 'john.doe@example.com',
+            phone: '+1234567801',
             age: 45,
             dateOfBirth: new Date('1979-05-15'),
             gender: 'male',
@@ -74,6 +108,8 @@ const seedData = async () => {
 
         const patient2 = await Patient.create({
             name: 'Emily Martinez',
+            email: 'emily.martinez@example.com',
+            phone: '+1234567802',
             age: 62,
             dateOfBirth: new Date('1962-08-22'),
             gender: 'female',
@@ -95,6 +131,8 @@ const seedData = async () => {
 
         const patient3 = await Patient.create({
             name: 'Robert Williams',
+            email: 'robert.williams@example.com',
+            phone: '+1234567803',
             age: 58,
             dateOfBirth: new Date('1966-03-10'),
             gender: 'male',

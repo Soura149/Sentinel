@@ -28,13 +28,26 @@ export const requestOTP = async (req, res) => {
             });
         }
 
+        const cleanEmail = email.toLowerCase().trim();
+        const cleanPhone = phone.trim();
+        const cleanName = name.trim();
+
+        console.log(`[AUTH DEBUG] OTP Request - Email: "${cleanEmail}", Phone: "${cleanPhone}", Name: "${cleanName}"`);
+
         // Find patient matching Email and Phone
         const patient = await Patient.findOne({
-            email: email.toLowerCase(),
-            phone: phone
+            email: cleanEmail,
+            phone: cleanPhone
         });
 
         if (!patient) {
+            console.log(`[AUTH DEBUG] Patient NOT FOUND for keys: email="${cleanEmail}", phone="${cleanPhone}"`);
+            // Helper debugging - check if email exists at least?
+            const emailExists = await Patient.findOne({ email: cleanEmail });
+            if (emailExists) {
+                console.log(`[AUTH DEBUG] BUT Email "${cleanEmail}" exists! Phone stored: "${emailExists.phone}" vs provided: "${cleanPhone}"`);
+            }
+
             return res.status(404).json({
                 success: false,
                 message: 'Patient not found with these details.'
@@ -42,7 +55,8 @@ export const requestOTP = async (req, res) => {
         }
 
         // Verify Name (Case Insensitive)
-        if (patient.name.trim().toLowerCase() !== name.trim().toLowerCase()) {
+        if (patient.name.trim().toLowerCase() !== cleanName.toLowerCase()) {
+            console.log(`[AUTH DEBUG] Name mismatch. Stored: "${patient.name}", Provided: "${cleanName}"`);
             return res.status(404).json({
                 success: false,
                 message: 'Patient details do not match (Name mismatch).'
@@ -53,7 +67,7 @@ export const requestOTP = async (req, res) => {
         const otp = generateOTP();
 
         // Store OTP with expiration (5 mins)
-        otpStore.set(email, {
+        otpStore.set(cleanEmail, {
             otp,
             expires: Date.now() + 5 * 60 * 1000,
             patientId: patient._id
