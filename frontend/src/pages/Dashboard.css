@@ -923,6 +923,12 @@
     background: #f0fdf4;
 }
 
+.icon-btn-sm.warning:hover {
+    border-color: #f59e0b;
+    color: #f59e0b;
+    background: #fffbeb;
+}
+
 /* Staff Table Styles */
 .staff-name-cell {
     display: flex;
@@ -1601,4 +1607,50 @@
 
 .dark-mode .staff-horizontal-scroll::-webkit-scrollbar-thumb {
     background: #475569;
+}
+
+/* Responsive Button Styles */
+.btn-responsive .btn-content-mobile {
+    display: none;
+}
+
+.btn-responsive .btn-content-desktop {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+@media (max-width: 768px) {
+    .section-header-actions {
+        width: 100%;
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .section-search {
+        flex: 1;
+        width: auto;
+    }
+
+    .btn-responsive {
+        padding: 0;
+        width: 42px;
+        height: 42px;
+        /* Match height of search input/icon btns */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .btn-responsive .btn-content-desktop {
+        display: none;
+    }
+
+    .btn-responsive .btn-content-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }

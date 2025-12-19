@@ -15,7 +15,8 @@ import {
     Eye,
     Mail,
     Phone,
-    LogOut
+    LogOut,
+    RotateCcw
 } from 'lucide-react';
 import logo from '../assets/logo.png';
 import AddPatientModal from '../components/AddPatientModal';
@@ -53,12 +54,19 @@ const Dashboard = () => {
     const { user } = useAuth();
 
     useEffect(() => {
-        fetchData();
+        fetchData(); // Initial load
+
+        // Poll for updates every 10 seconds to keep staff status fresh
+        const intervalId = setInterval(() => {
+            fetchData(true);
+        }, 10000);
+
+        return () => clearInterval(intervalId);
     }, [user]);
 
-    const fetchData = async () => {
+    const fetchData = async (silent = false) => {
         try {
-            setLoading(true);
+            if (!silent) setLoading(true);
             const admittedRes = await patientAPI.getAll({ status: 'admitted' });
             const dischargedRes = await patientAPI.getAll({ status: 'discharged' });
 
@@ -72,7 +80,7 @@ const Dashboard = () => {
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
-            setLoading(false);
+            if (!silent) setLoading(false);
         }
     };
 
@@ -87,6 +95,17 @@ const Dashboard = () => {
         } catch (error) {
             console.error('Discharge failed:', error);
             alert('Failed to discharge patient');
+        }
+    };
+
+    const handleReadmitPatient = async (id) => {
+        if (!window.confirm('Are you sure you want to readmit this patient?')) return;
+        try {
+            await patientAPI.readmit(id);
+            fetchData(); // Refresh lists
+        } catch (error) {
+            console.error('Readmit failed:', error);
+            alert('Failed to readmit patient');
         }
     };
 
@@ -150,7 +169,7 @@ const Dashboard = () => {
                 <div className="metric-card">
                     <div className="metric-card-header">
                         <span className="metric-label">Admitted</span>
-                        <RefreshCw size={16} className={`refresh-icon ${loading ? 'spinning' : ''}`} onClick={fetchData} title="Refresh" />
+                        <RefreshCw size={16} className={`refresh-icon ${loading ? 'spinning' : ''}`} onClick={() => fetchData(false)} title="Refresh" />
                     </div>
                     <div className="metric-value-large">{admittedPatients.length}</div>
                 </div>
@@ -197,8 +216,13 @@ const Dashboard = () => {
                                         onChange={(e) => setStaffSearch(e.target.value)}
                                     />
                                 </div>
-                                <button className="btn-primary btn-sm" onClick={() => setShowStaffModal(true)}>
-                                    <Users size={16} /> Add Staff
+                                <button className="btn-primary btn-sm btn-responsive" onClick={() => setShowStaffModal(true)}>
+                                    <span className="btn-content-desktop">
+                                        <Users size={16} /> Add Staff
+                                    </span>
+                                    <span className="btn-content-mobile">
+                                        <Plus size={20} />
+                                    </span>
                                 </button>
                             </div>
                         </div>
@@ -288,8 +312,13 @@ const Dashboard = () => {
                                     onChange={(e) => setPatientSearch(e.target.value)}
                                 />
                             </div>
-                            <button className="btn-primary btn-sm" onClick={() => setShowAddModal(true)}>
-                                <UserPlus size={16} /> Add Patient
+                            <button className="btn-primary btn-sm btn-responsive" onClick={() => setShowAddModal(true)}>
+                                <span className="btn-content-desktop">
+                                    <UserPlus size={16} /> Add Patient
+                                </span>
+                                <span className="btn-content-mobile">
+                                    <Plus size={20} />
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -353,13 +382,22 @@ const Dashboard = () => {
                                                             <LogOut size={14} />
                                                         </button>
                                                     ) : (
-                                                        <button
-                                                            className="icon-btn-sm danger"
-                                                            onClick={() => handleDeletePatient(patient._id)}
-                                                            title="Delete Record"
-                                                        >
-                                                            <Trash2 size={14} />
-                                                        </button>
+                                                        <>
+                                                            <button
+                                                                className="icon-btn-sm warning"
+                                                                onClick={() => handleReadmitPatient(patient._id)}
+                                                                title="Readmit Patient"
+                                                            >
+                                                                <RotateCcw size={14} />
+                                                            </button>
+                                                            <button
+                                                                className="icon-btn-sm danger"
+                                                                onClick={() => handleDeletePatient(patient._id)}
+                                                                title="Delete Record"
+                                                            >
+                                                                <Trash2 size={14} />
+                                                            </button>
+                                                        </>
                                                     )}
                                                 </div>
                                             </td>

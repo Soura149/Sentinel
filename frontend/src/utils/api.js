@@ -65,6 +65,7 @@ export const patientAPI = {
     update: (id, data) => api.put(`/patients/${id}`, data),
     delete: (id) => api.delete(`/patients/${id}`),
     discharge: (id) => api.put(`/patients/${id}/discharge`),
+    readmit: (id) => api.put(`/patients/${id}/readmit`),
 };
 
 // Vitals APIs

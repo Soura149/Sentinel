@@ -40,9 +40,10 @@ const Navbar = () => {
             <div className="navbar-content">
                 <div className="navbar-brand" onClick={() => navigate(user?.role === 'patient' ? '/patient-dashboard' : '/dashboard')}>
                     <img src={logo} alt="Sentinel" className="brand-icon" style={{ width: '36px', height: '36px', objectFit: 'contain' }} />
-                    <span>Sentinel</span>
+                    <span className="navbar-brand-text">Sentinel</span>
+
                     {user && (
-                        <span className="navbar-dashboard-text">Dashboard</span>
+                        <span className="navbar-dashboard-text" style={{ borderLeft: 'none', paddingLeft: 0, marginLeft: '8px' }}>Dashboard</span>
                     )}
                 </div>
 
@@ -59,7 +60,7 @@ const Navbar = () => {
                     )}
 
                     <button
-                        className="theme-toggle"
+                        className="navbar-theme-toggle"
                         onClick={toggleTheme}
                         aria-label="Toggle theme"
                     >

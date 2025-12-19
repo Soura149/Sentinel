@@ -11,7 +11,7 @@ const Login = () => {
     const { isDarkMode, toggleTheme } = useTheme();
     const { login, isAuthenticated, user, loading: authLoading } = useAuth();
     const navigate = useNavigate();
-    
+
     const [loginType, setLoginType] = useState('staff'); // 'staff' (includes admin) or 'patient'
 
     // Staff Login State
@@ -328,7 +328,11 @@ const Login = () => {
                                 <button
                                     type="button"
                                     className="back-btn"
-                                    onClick={() => setPatientStep('request')}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setPatientStep('request');
+                                        setError('');
+                                    }}
                                 >
                                     Back to Details
                                 </button>
