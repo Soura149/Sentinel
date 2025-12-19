@@ -54,12 +54,19 @@ const Dashboard = () => {
     const { user } = useAuth();
 
     useEffect(() => {
-        fetchData();
+        fetchData(); // Initial load
+
+        // Poll for updates every 10 seconds to keep staff status fresh
+        const intervalId = setInterval(() => {
+            fetchData(true);
+        }, 10000);
+
+        return () => clearInterval(intervalId);
     }, [user]);
 
-    const fetchData = async () => {
+    const fetchData = async (silent = false) => {
         try {
-            setLoading(true);
+            if (!silent) setLoading(true);
             const admittedRes = await patientAPI.getAll({ status: 'admitted' });
             const dischargedRes = await patientAPI.getAll({ status: 'discharged' });
 
@@ -73,7 +80,7 @@ const Dashboard = () => {
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
-            setLoading(false);
+            if (!silent) setLoading(false);
         }
     };
 
@@ -162,7 +169,7 @@ const Dashboard = () => {
                 <div className="metric-card">
                     <div className="metric-card-header">
                         <span className="metric-label">Admitted</span>
-                        <RefreshCw size={16} className={`refresh-icon ${loading ? 'spinning' : ''}`} onClick={fetchData} title="Refresh" />
+                        <RefreshCw size={16} className={`refresh-icon ${loading ? 'spinning' : ''}`} onClick={() => fetchData(false)} title="Refresh" />
                     </div>
                     <div className="metric-value-large">{admittedPatients.length}</div>
                 </div>
