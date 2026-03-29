@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { authAPI } from '../utils/api';
+/* eslint-disable react-refresh/only-export-components */
 
 const AuthContext = createContext(null);
 
@@ -29,6 +30,22 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
         }
     }, []);
+
+    // Heartbeat mechanism to keep online status accurate
+    useEffect(() => {
+        let interval;
+        if (user && user.role !== 'patient') {
+            // Ping immediately, then every 1 minute
+            const ping = () => {
+                authAPI.heartbeat().catch(() => {});
+            };
+            ping();
+            interval = setInterval(ping, 60000);
+        }
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [user]);
 
     const verifyToken = async () => {
         // Skip verification for patients for now (or implement patient-specific verify)
