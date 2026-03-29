@@ -1,14 +1,14 @@
 .app-shell{
   min-height:100vh;
-  background: radial-gradient(1100px 550px at 20% 20%, rgba(0,212,200,0.07), transparent 60%),
-              radial-gradient(800px 500px at 85% 75%, rgba(52,211,153,0.05), transparent 65%),
-              linear-gradient(180deg, #0a0a17 0%, #12121f 100%);
+  background: radial-gradient(1100px 550px at 20% 20%, rgba(45,104,255,0.07), transparent 60%),
+              radial-gradient(800px 500px at 85% 75%, rgba(45,104,255,0.04), transparent 65%),
+              linear-gradient(180deg, #12141a 0%, #0d0f14 100%);
   display:flex;
 }
 
 .app-sidebar{
   width:260px;
-  background: rgba(8, 8, 18, 0.75);
+  background: rgba(22, 24, 33, 0.90);
   border-right: 1px solid rgba(255,255,255,0.06);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -67,10 +67,10 @@
   color: rgba(255,255,255,0.92);
 }
 .sidebar-link.active{
-  background: linear-gradient(90deg, rgba(0,212,200,0.20), rgba(0,212,200,0.06));
-  border-color: rgba(0,212,200,0.40);
-  box-shadow: 0 2px 14px rgba(0,212,200,0.15), 0 10px 30px rgba(0,0,0,0.30);
-  color: #00d4c8;
+  background: #2d68ff;
+  border-color: #2d68ff;
+  box-shadow: 0 4px 14px rgba(45,104,255,0.30), 0 10px 30px rgba(0,0,0,0.30);
+  color: #ffffff;
 }
 
 .sidebar-footer{
@@ -94,8 +94,8 @@
 .sidebar-avatar{
   width:40px;height:40px;border-radius: 14px;
   display:flex;align-items:center;justify-content:center;
-  background: linear-gradient(135deg, #00d4c8, #10b981);
-  color: #0a0a17;
+  background: linear-gradient(135deg, #2d68ff, #60a5fa);
+  color: #ffffff;
   font-weight: 900;
 }
 .sidebar-user-name{ color: rgba(255,255,255,0.92); font-weight: 700; line-height: 1.1; }
@@ -128,7 +128,7 @@
   justify-content:space-between;
   gap: 16px;
   border-bottom: 1px solid rgba(255,255,255,0.05);
-  background: rgba(8, 8, 18, 0.55);
+  background: rgba(18, 20, 26, 0.70);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }

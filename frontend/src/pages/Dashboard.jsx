@@ -10,7 +10,9 @@ import {
     Trash2,
     Eye,
     LogOut,
-    RotateCcw
+    RotateCcw,
+    UserCheck,
+    Activity
 } from 'lucide-react';
 import AddPatientModal from '../components/AddPatientModal';
 import AddStaffModal from '../components/AddStaffModal';
@@ -165,10 +167,15 @@ const Dashboard = () => {
             <div className="clinical-metrics">
                 <div className="clinical-metric-card">
                     <div className="metric-top">
-                        <span className="metric-kicker">Total Patients</span>
-                        <button className="metric-icon-btn" onClick={() => fetchData(false)} title="Refresh">
-                            <RefreshCw size={16} className={loading ? 'spinning' : ''} />
-                        </button>
+                        <span className="metric-kicker" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            Total Patients
+                            <button className="icon-btn-sm" onClick={() => fetchData(false)} title="Refresh" style={{ padding: 0, height: 'auto', background: 'transparent', border: 'none', color: 'inherit' }}>
+                                <RefreshCw size={14} className={loading ? 'spinning' : ''} />
+                            </button>
+                        </span>
+                        <div className="metric-icon-box">
+                            <Users size={20} />
+                        </div>
                     </div>
                     <div className="metric-number">{admittedPatients.length + dischargedPatients.length}</div>
                     <div className="metric-foot">Since last shift</div>
@@ -176,16 +183,22 @@ const Dashboard = () => {
                 <div className="clinical-metric-card accent-green">
                     <div className="metric-top">
                         <span className="metric-kicker">Admitted</span>
-                        <span className="metric-mini">Today’s check-ins</span>
+                        <div className="metric-icon-box">
+                            <UserPlus size={20} />
+                        </div>
                     </div>
                     <div className="metric-number">{admittedPatients.length}</div>
+                    <div className="metric-foot" style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 600 }}>Today’s check-ins</div>
                 </div>
                 <div className="clinical-metric-card accent-red">
                     <div className="metric-top">
                         <span className="metric-kicker">Discharged</span>
-                        <span className="metric-mini">Processing</span>
+                        <div className="metric-icon-box">
+                            <UserCheck size={20} />
+                        </div>
                     </div>
                     <div className="metric-number">{dischargedPatients.length}</div>
+                    <div className="metric-foot" style={{ color: 'rgba(255,255,255,0.55)', fontWeight: 600 }}>Processing</div>
                 </div>
             </div>
 

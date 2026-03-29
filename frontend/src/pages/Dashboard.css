@@ -85,7 +85,7 @@
     top:0;
     bottom:0;
     width: 3px;
-    background: rgba(0,212,200,0.90);
+    background: #2d68ff;
 }
 
 .clinical-metric-card.accent-green::before{ background: rgba(52,211,153,0.90); }
@@ -111,6 +111,34 @@
     font-size: 12px;
     color: rgba(255,255,255,0.55);
     font-weight: 600;
+}
+
+.metric-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.clinical-metric-card .metric-icon-box {
+    background: rgba(45,104,255,0.15);
+    color: #4b82ff;
+    border: 1px solid rgba(45,104,255,0.25);
+}
+
+.clinical-metric-card.accent-green .metric-icon-box {
+    background: rgba(52,211,153,0.15);
+    color: #34d399;
+    border: 1px solid rgba(52,211,153,0.25);
+}
+
+.clinical-metric-card.accent-red .metric-icon-box {
+    background: rgba(248,113,113,0.15);
+    color: #fca5a5;
+    border: 1px solid rgba(248,113,113,0.25);
 }
 
 .metric-icon-btn{
@@ -381,7 +409,7 @@
     width: 10px;
     height: 10px;
     border-radius: 999px;
-    border: 2px solid #12121f;
+    border: 2px solid #171923;
 }
 
 .staff-dot.online{ background: #34d399; }
@@ -434,9 +462,9 @@
 
 /* active-shift-banner dark refinement */
 .app-shell.dark .active-shift-banner {
-    background: linear-gradient(135deg, rgba(0,212,200,0.20), rgba(0,168,157,0.13));
-    border: 1px solid rgba(0,212,200,0.28);
-    box-shadow: 0 8px 28px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,212,200,0.08);
+    background: linear-gradient(135deg, rgba(45,104,255,0.20), rgba(29,78,216,0.13));
+    border: 1px solid rgba(45,104,255,0.28);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.35), 0 0 0 1px rgba(45,104,255,0.08);
     color: rgba(255,255,255,0.92);
 }
 
