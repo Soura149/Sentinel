@@ -64,6 +64,9 @@ const PatientDetail = () => {
             {/* ── Header ── */}
             <div className="pd-header">
                 <div className="pd-header-left">
+                    <button className="icon-btn-sm" onClick={() => navigate('/patients')} title="Back to Patients">
+                        <ArrowLeft size={18} strokeWidth={2.5} />
+                    </button>
                     <div className="pd-avatar">
                         {patient.name?.charAt(0)?.toUpperCase()}
                     </div>
@@ -86,10 +89,6 @@ const PatientDetail = () => {
                     </div>
                 </div>
                 <div className="pd-header-actions">
-                    <button className="pd-btn-back" onClick={() => navigate('/patients')}>
-                        <ArrowLeft size={15} />
-                        Back to Patients
-                    </button>
                     {patient.status === 'admitted' && (
                         <button className="pd-btn-discharge" onClick={handleDischarge} disabled={discharging}>
                             <LogOut size={15} />
