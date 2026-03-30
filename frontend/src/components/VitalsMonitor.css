@@ -467,13 +467,13 @@
     gap: 8px;
     padding: 12px 22px;
     border-radius: 999px;
-    background: linear-gradient(135deg, #00c8e0, #0077b8);
+    background: linear-gradient(135deg, #2d68ff, #60a5fa);
     border: none;
-    color: #020a1c;
+    color: #ffffff;
     font-weight: 800;
     font-size: 14px;
     cursor: pointer;
-    box-shadow: 0 6px 24px rgba(0,200,224,0.35);
+    box-shadow: 0 6px 24px rgba(45,104,255,0.35);
     transition: all 160ms ease;
     overflow: visible;
     z-index: 10;
@@ -481,7 +481,7 @@
 }
 .vm-add-fab:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 32px rgba(0,200,224,0.45);
+    box-shadow: 0 10px 32px rgba(45,104,255,0.45);
 }
 
 /* ── Form overlay ── */
@@ -608,16 +608,16 @@
     gap: 8px;
     padding: 10px 22px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #00c8e0, #0077b8);
+    background: linear-gradient(135deg, #2d68ff, #60a5fa);
     border: none;
-    color: #020a1c;
+    color: #ffffff;
     font-weight: 800;
     font-size: 14px;
     cursor: pointer;
     transition: all 150ms ease;
     overflow: visible;
 }
-.vm-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,200,224,0.30); }
+.vm-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(45,104,255,0.30); }
 
 .vm-btn-secondary {
     display: inline-flex;
