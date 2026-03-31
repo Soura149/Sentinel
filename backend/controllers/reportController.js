@@ -116,7 +116,7 @@ export const createTextReport = async (req, res) => {
 // @route   POST /api/reports/upload
 // @access  Private
 export const uploadFileReport = async (req, res) => {
-    console.log('📤 Upload request received');
+    console.log('📤 Upload request received (Memory Mode)');
     try {
         if (!req.file) {
             console.log('❌ No file in request');
@@ -126,20 +126,17 @@ export const uploadFileReport = async (req, res) => {
             });
         }
 
-        console.log('✅ File received:', {
-            filename: req.file.filename,
+        console.log('✅ File received in buffer:', {
             originalname: req.file.originalname,
-            path: req.file.path,
-            size: req.file.size
+            size: req.file.size,
+            mimetype: req.file.mimetype
         });
 
         const { patientId, title, category, description, tags } = req.body;
 
         const patient = await Patient.findById(patientId);
         if (!patient) {
-            // Delete uploaded file if patient not found
-            console.log('❌ Patient not found, deleting file');
-            fs.unlinkSync(req.file.path);
+            console.log('❌ Patient not found');
             return res.status(404).json({
                 success: false,
                 message: 'Patient not found'
@@ -148,93 +145,46 @@ export const uploadFileReport = async (req, res) => {
 
         console.log('✅ Patient found:', patient.name);
 
-        // Determine type based on mimetype
-        let type = 'image';
-        if (req.file.mimetype === 'application/pdf') {
-            type = 'pdf';
-        }
+        // Convert buffer to Base64 data URL
+        const base64Data = req.file.buffer.toString('base64');
+        const dataUrl = `data:${req.file.mimetype};base64,${base64Data}`;
 
-        console.log('📝 Creating report in database...');
+        console.log('📝 Creating report in database with Base64 content...');
 
-        // Parse tags safely to prevent JSON parsing errors from deleting files
+        // Parse tags safely
         let parsedTags = [];
         if (tags) {
             try {
-                parsedTags = JSON.parse(tags);
+                parsedTags = typeof tags === 'string' ? JSON.parse(tags) : tags;
             } catch (parseError) {
                 console.log('⚠️ Tags parsing error, using empty array:', parseError.message);
                 parsedTags = [];
             }
         }
 
-        // Use BASE_URL from environment or build dynamically
-        const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
-        const fileUrl = `${baseUrl}/uploads/${req.file.filename}`;
-        console.log('File URL:', fileUrl);
-
         const report = await Report.create({
             patientId,
             title,
-            type,
+            type: req.file.mimetype === 'application/pdf' ? 'pdf' : 'image',
             category,
             description,
             tags: parsedTags,
-            fileUrl: fileUrl,
+            fileUrl: dataUrl, // Store Base64 string directly in database
             fileName: req.file.originalname,
             fileSize: req.file.size,
             mimeType: req.file.mimetype,
             uploadedBy: req.user._id
         });
 
-        console.log('✅ Report created in database:', report._id);
+        console.log('✅ Report created in database (Base64):', report._id);
 
-        // Verify file still exists
-        const fileStillExists = fs.existsSync(req.file.path);
-        console.log('📁 File exists after DB save?', fileStillExists);
-
-        // Trigger AI processing in background (optional)
-        try {
-            const aiServiceUrl = process.env.AI_SERVICE_URL;
-            if (aiServiceUrl) {
-                // Send file to AI service for processing
-                const filePath = path.join(__dirname, '../uploads', req.file.filename);
-                console.log('🤖 Sending to AI service:', filePath);
-                await axios.post(`${aiServiceUrl}/api/process-file`, {
-                    reportId: report._id.toString(),
-                    filePath,
-                    type
-                });
-                console.log('✅ AI processing initiated');
-            }
-        } catch (aiError) {
-            console.error('❌ AI processing error (file NOT deleted):', aiError.message);
-            // Continue even if AI processing fails - DON'T delete the file
-        }
-
-        console.log('✅ Upload complete, sending response');
         res.status(201).json({
             success: true,
-            message: 'File uploaded successfully',
+            message: 'File uploaded and saved to database successfully',
             data: report
         });
     } catch (error) {
         console.error('❌ Upload error:', error.message);
-        console.error('Stack:', error.stack);
-
-        // Delete file if report creation fails
-        if (req.file && req.file.path) {
-            try {
-                if (fs.existsSync(req.file.path)) {
-                    console.log('🗑️ Deleting file due to error:', req.file.path);
-                    fs.unlinkSync(req.file.path);
-                } else {
-                    console.log('⚠️ File already deleted or not found:', req.file.path);
-                }
-            } catch (deleteError) {
-                console.error('❌ Error deleting file:', deleteError.message);
-            }
-        }
-
         res.status(500).json({
             success: false,
             message: error.message
@@ -294,13 +244,7 @@ export const deleteReport = async (req, res) => {
             });
         }
 
-        // Delete file if it exists
-        if (report.fileUrl) {
-            const filePath = path.join(__dirname, '..', report.fileUrl);
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
-            }
-        }
+        // Memory Mode: No file on disk to delete
 
         await report.deleteOne();
 
@@ -322,58 +266,33 @@ export const deleteReport = async (req, res) => {
 // @access  Private
 export const downloadReport = async (req, res) => {
     try {
-        console.log('📥 Download request for report ID:', req.params.id);
+        console.log('📥 Download request (Memory Mode) for report ID:', req.params.id);
 
         const report = await Report.findById(req.params.id);
 
         if (!report) {
-            console.log('❌ Report not found in database');
             return res.status(404).json({
                 success: false,
                 message: 'Report not found'
             });
         }
 
-        console.log('✅ Report found:', {
-            id: report._id,
-            title: report.title,
-            fileUrl: report.fileUrl,
-            fileName: report.fileName
-        });
-
-        if (!report.fileUrl) {
-            console.log('❌ Report has no fileUrl');
+        if (!report.fileUrl || !report.fileUrl.startsWith('data:')) {
+            console.log('❌ Report has no valid Base64 data');
             return res.status(400).json({
                 success: false,
-                message: 'This report has no file to download'
+                message: 'This report has no valid file data to download'
             });
         }
 
-        // Extract filename from URL (handles both old relative paths and new full URLs)
-        let filename;
-        if (report.fileUrl.startsWith('http')) {
-            // New format: http://localhost:5000/uploads/filename
-            const urlParts = report.fileUrl.split('/');
-            filename = urlParts[urlParts.length - 1];
-        } else {
-            // Old format: /uploads/filename
-            filename = path.basename(report.fileUrl);
-        }
+        // Decode Base64 string back to binary
+        const base64String = report.fileUrl.split(',')[1];
+        const buffer = Buffer.from(base64String, 'base64');
 
-        const filePath = path.join(__dirname, '../uploads', filename);
-        console.log('📁 Looking for file at:', filePath);
-        console.log('📁 File exists?', fs.existsSync(filePath));
-
-        if (!fs.existsSync(filePath)) {
-            console.log('❌ File not found on server');
-            return res.status(404).json({
-                success: false,
-                message: 'File not found on server'
-            });
-        }
-
-        console.log('✅ Sending file download');
-        res.download(filePath, report.fileName);
+        console.log('✅ Sending buffered file download');
+        res.setHeader('Content-Type', report.mimeType || 'application/octet-stream');
+        res.setHeader('Content-Disposition', `attachment; filename="${report.fileName || 'report'}"`);
+        res.send(buffer);
     } catch (error) {
         console.error('❌ Download error:', error);
         res.status(500).json({
@@ -404,28 +323,15 @@ export const extractReportData = async (req, res) => {
             });
         }
 
-        // Get the file path
-        let filename;
-        if (report.fileUrl.startsWith('http')) {
-            const urlParts = report.fileUrl.split('/');
-            filename = urlParts[urlParts.length - 1];
-        } else {
-            filename = path.basename(report.fileUrl);
-        }
-
-        const filePath = path.join(__dirname, '../uploads', filename);
-
-        if (!fs.existsSync(filePath)) {
-            return res.status(404).json({
+        if (!report.fileUrl || !report.fileUrl.startsWith('data:')) {
+            return res.status(400).json({
                 success: false,
-                message: 'Report file not found on server'
+                message: 'Report has no valid image data for extraction'
             });
         }
 
-        // Read the file and convert to base64
-        console.log('🔬 Reading file for extraction:', filePath);
-        const imageBuffer = fs.readFileSync(filePath);
-        const base64Image = imageBuffer.toString('base64');
+        // Extract Base64 part from Data URL
+        const base64Image = report.fileUrl.split(',')[1];
 
         // Send to AI service for extraction
         const aiServiceUrl = process.env.AI_SERVICE_URL;
@@ -436,7 +342,7 @@ export const extractReportData = async (req, res) => {
             });
         }
 
-        console.log('🤖 Sending to AI service for extraction...');
+        console.log('🤖 Sending Base64 to AI service for extraction (Memory Mode)...');
         const aiResponse = await axios.post(`${aiServiceUrl}/api/extract-report`, {
             image: base64Image
         }, {
